@@ -122,6 +122,40 @@ float sPCC(const Vector<float>& x, const Vector<float>& y)
 }
 
 //----------------------------------------------------------------------------
+// Calculates the sample Pearson Correlation Coefficient between two vectors.
+float sPCC(const Vector<float>& x, const Vector<float>& y)
+{
+    int n = x.Size();
+
+    if (n != y.Size() || n <= 1)
+        return 0.0f;
+
+    float meanX = calculateMean(x);
+    float meanY = calculateMean(y);
+
+    float numerator = 0.0f;
+    float sumSqX = 0.0f;
+    float sumSqY = 0.0f;
+
+    for (int i = 0; i < n; ++i)
+    {
+        float diffX = x[i] - meanX;
+        float diffY = y[i] - meanY;
+
+        numerator += diffX * diffY;
+        sumSqX += diffX * diffX;
+        sumSqY += diffY * diffY;
+    }
+
+    float denominator = squareRoot(sumSqX * sumSqY);
+
+    if (denominator == 0.0f)
+        return 0.0f;
+
+    return numerator / denominator;
+}
+
+//----------------------------------------------------------------------------
 // Converts metres/second to kilometres/hour.
 float ConvertMsToKmh(float ms)
 {
