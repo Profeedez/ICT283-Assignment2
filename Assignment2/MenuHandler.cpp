@@ -18,11 +18,8 @@
 // Function implementations
 
 //----------------------------------------------------------------------------
-// Constructs a handler that connects the menu UI to the weather log.
-MenuHandler::MenuHandler(Menu& menu, const WeatherLogType& log)
-    : m_menu(menu), m_log(log)
-{
-}
+// Constructs a handler that connects the menu UI to .
+
 
 //----------------------------------------------------------------------------
 // Runs the menu loop and dispatches options.

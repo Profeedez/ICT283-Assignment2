@@ -1,7 +1,7 @@
 // Utility.cpp
 //
 // Shared helper function implementations used across the project.
-Includes string trimming, month conversion, CSV header lookup, and input validation support.
+// Includes string trimming, month conversion, CSV header lookup, and input validation support.
 //
 // Version
 // 01 01/03/2026 Heng Kiao Woon - Initial Utility implementation.

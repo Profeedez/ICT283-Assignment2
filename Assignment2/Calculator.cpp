@@ -1,11 +1,13 @@
 // Calculator.cpp
 //
 // Mathematical helper function implementations used by the weather statistics program.
-// Implements absolute value, square root, mean, standard deviation, and wind-speed conversion routines.
+// Implements absolute value, square root, mean, standard deviation, sPCC,
+// and wind-speed conversion routines.
 //
 // Version
 // 01 01/03/2026 Heng Kiao Woon - Initial Calculator implementation.
 // 02 03/04/2026 Heng Kiao Woon - Updated file header.
+// 03 03/04/2026 Heng Kiao Woon - Refactored statistical functions to use Vector.
 //---------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
@@ -47,45 +49,76 @@ float squareRoot(float x)
 }
 
 //----------------------------------------------------------------------------
-// Calculates the arithmetic mean of an array of floats.
-float calculateMean(const float dataArray[], int n)
+// Calculates the arithmetic mean of a vector of floats.
+float calculateMean(const Vector<float>& dataVector)
 {
-    if (n <= 0 || dataArray == nullptr) return 0.0f;
+    if (dataVector.Size() <= 0)
+        return 0.0f;
+
     float sum = 0.0f;
-    for (int i = 0; i < n; i++)
+
+    for (int i = 0; i < dataVector.Size(); ++i)
     {
-        sum += dataArray[i];
+        sum += dataVector[i];
     }
-    return sum / static_cast<float>(n);
+
+    return sum / static_cast<float>(dataVector.Size());
 }
 
 //----------------------------------------------------------------------------
-// Calculates the standard deviation (n-1) of an array of floats.
-float calculateStandardDeviation(const float dataArray[], int n)
+// Calculates the sample standard deviation (n-1) of a vector of floats.
+float calculateStandardDeviation(const Vector<float>& dataVector)
 {
-    if (dataArray == nullptr || n <= 1)
+    int n = dataVector.Size();
+
+    if (n <= 1)
         return 0.0f;
 
-    // Step 1: calculate mean
-    float sum = 0.0f;
-    for (int i = 0; i < n; i++)
-        sum += dataArray[i];
-
-    float mean = sum / n;
-
-    // Step 2: sum of squared differences
+    float mean = calculateMean(dataVector);
     float sumSq = 0.0f;
-    for (int i = 0; i < n; i++)
+
+    for (int i = 0; i < n; ++i)
     {
-        float diff = dataArray[i] - mean;
+        float diff = dataVector[i] - mean;
         sumSq += diff * diff;
     }
 
-    // Step 3: divide by (n - 1)  → standard deviation
-    float variance = sumSq / (n - 1);
-
-    // Step 4: square root
+    float variance = sumSq / static_cast<float>(n - 1);
     return squareRoot(variance);
+}
+
+//----------------------------------------------------------------------------
+// Calculates the sample Pearson Correlation Coefficient between two vectors.
+float sPCC(const Vector<float>& x, const Vector<float>& y)
+{
+    int n = x.Size();
+
+    if (n != y.Size() || n <= 1)
+        return 0.0f;
+
+    float meanX = calculateMean(x);
+    float meanY = calculateMean(y);
+
+    float numerator = 0.0f;
+    float sumSqX = 0.0f;
+    float sumSqY = 0.0f;
+
+    for (int i = 0; i < n; ++i)
+    {
+        float diffX = x[i] - meanX;
+        float diffY = y[i] - meanY;
+
+        numerator += diffX * diffY;
+        sumSqX += diffX * diffX;
+        sumSqY += diffY * diffY;
+    }
+
+    float denominator = squareRoot(sumSqX * sumSqY);
+
+    if (denominator == 0.0f)
+        return 0.0f;
+
+    return numerator / denominator;
 }
 
 //----------------------------------------------------------------------------
