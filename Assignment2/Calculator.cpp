@@ -87,7 +87,7 @@ float calculateStandardDeviation(const Vector<float>& dataVector)
     return squareRoot(variance);
 }
 
-//----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Calculates the sample Pearson Correlation Coefficient between two vectors.
 float sPCC(const Vector<float>& x, const Vector<float>& y)
 {
