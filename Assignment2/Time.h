@@ -12,7 +12,8 @@
  *
  * Version History:
  * 01 01/03/2026 Heng Kiao Woon - Initial Time class declaration.
- * 02 03/04/2026 Heng Kiao Woon - Updated file header
+ * 02 03/04/2026 Heng Kiao Woon - Updated file header.
+ * 03 03/04/2026 Heng Kiao Woon - Added comparison operators for BST ordering.
  */
 
 #ifndef TIME_H_INCLUDED
@@ -101,5 +102,53 @@ istream& operator>>(istream& input, Time& time);
  * @return The same output stream (for chaining).
  */
 ostream& operator<<(ostream& os, const Time& time);
+
+/**
+ * @brief Equality comparison between two Time objects.
+ * @param left Left-hand Time.
+ * @param right Right-hand Time.
+ * @return true if both times are equal, otherwise false.
+ */
+bool operator==(const Time& left, const Time& right);
+
+/**
+ * @brief Inequality comparison between two Time objects.
+ * @param left Left-hand Time.
+ * @param right Right-hand Time.
+ * @return true if the times are not equal, otherwise false.
+ */
+bool operator!=(const Time& left, const Time& right);
+
+/**
+ * @brief Less-than comparison between two Time objects.
+ * @param left Left-hand Time.
+ * @param right Right-hand Time.
+ * @return true if @p left is earlier than @p right, otherwise false.
+ */
+bool operator<(const Time& left, const Time& right);
+
+/**
+ * @brief Greater-than comparison between two Time objects.
+ * @param left Left-hand Time.
+ * @param right Right-hand Time.
+ * @return true if @p left is later than @p right, otherwise false.
+ */
+bool operator>(const Time& left, const Time& right);
+
+/**
+ * @brief Less-than-or-equal comparison between two Time objects.
+ * @param left Left-hand Time.
+ * @param right Right-hand Time.
+ * @return true if @p left is earlier than or equal to @p right.
+ */
+bool operator<=(const Time& left, const Time& right);
+
+/**
+ * @brief Greater-than-or-equal comparison between two Time objects.
+ * @param left Left-hand Time.
+ * @param right Right-hand Time.
+ * @return true if @p left is later than or equal to @p right.
+ */
+bool operator>=(const Time& left, const Time& right);
 
 #endif // TIME_H_INCLUDED

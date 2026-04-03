@@ -1,16 +1,17 @@
 // Time.cpp
 //
 // Implementation of the Time class and related operators.
-// Provides validation, setters, getters, and stream/comparison support for time values.
+// Provides validation, setters, getters, stream operators,
+// and comparison operators for time values.
 //
 // Version
 // 01 01/03/2026 Heng Kiao Woon - Initial Time class implementation.
 // 02 03/04/2026 Heng Kiao Woon - Updated file header.
+// 03 03/04/2026 Heng Kiao Woon - Added comparison operators for BST ordering.
 //---------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
 // Includes
-
 #include "Time.h"
 
 //----------------------------------------------------------------------------
@@ -112,4 +113,49 @@ ostream& operator<<(ostream& os, const Time& time)
        << time.GetMinute() << ":"
        << time.GetSecond();
     return os;
+}
+
+//----------------------------------------------------------------------------
+// Comparison operators for Time ordering.
+
+bool operator==(const Time& left, const Time& right)
+{
+    return left.GetHour() == right.GetHour()
+        && left.GetMinute() == right.GetMinute()
+        && left.GetSecond() == right.GetSecond();
+}
+
+bool operator!=(const Time& left, const Time& right)
+{
+    return !(left == right);
+}
+
+bool operator<(const Time& left, const Time& right)
+{
+    if (left.GetHour() != right.GetHour())
+    {
+        return left.GetHour() < right.GetHour();
+    }
+
+    if (left.GetMinute() != right.GetMinute())
+    {
+        return left.GetMinute() < right.GetMinute();
+    }
+
+    return left.GetSecond() < right.GetSecond();
+}
+
+bool operator>(const Time& left, const Time& right)
+{
+    return right < left;
+}
+
+bool operator<=(const Time& left, const Time& right)
+{
+    return !(right < left);
+}
+
+bool operator>=(const Time& left, const Time& right)
+{
+    return !(left < right);
 }
