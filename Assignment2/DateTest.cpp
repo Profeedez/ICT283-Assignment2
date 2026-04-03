@@ -1,11 +1,13 @@
 // DateTest.cpp
 //
 // Console test program for the Date class.
-// Checks construction, validation, setters, getters, and stream output behaviour.
+// Checks construction, validation, setters, getters,
+// stream output behaviour, and comparison operators.
 //
 // Version
 // 01 01/03/2026 Heng Kiao Woon - Unit test for Date.
 // 02 03/04/2026 Heng Kiao Woon - Updated file header.
+// 03 03/04/2026 Heng Kiao Woon - Added comparison operator tests.
 //---------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
@@ -43,6 +45,23 @@ int main()
               << " Month=" << d2.GetMonth()
               << " Year=" << d2.GetYear()
               << std::endl << std::endl;
+
+    std::cout << "-- Test 6 (Comparison operators) --" << std::endl;
+    Date a(1, 1, 2020);
+    Date b(2, 1, 2020);
+    Date c(1, 1, 2020);
+
+    std::cout << "a = " << a << std::endl;
+    std::cout << "b = " << b << std::endl;
+    std::cout << "c = " << c << std::endl;
+
+    std::cout << "a == c: " << (a == c) << std::endl;
+    std::cout << "a != b: " << (a != b) << std::endl;
+    std::cout << "a < b: " << (a < b) << std::endl;
+    std::cout << "b > a: " << (b > a) << std::endl;
+    std::cout << "a <= c: " << (a <= c) << std::endl;
+    std::cout << "b >= a: " << (b >= a) << std::endl;
+    std::cout << std::endl;
 
     return 0;
 }

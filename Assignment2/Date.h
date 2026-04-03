@@ -7,12 +7,13 @@
  * operator support needed by the weather record classes.
  *
  * @author Heng Kiao Woon
- * @version 02
+ * @version 03
  * @date 03/04/2026
  *
  * Version History:
  * 01 01/03/2026 Heng Kiao Woon - Initial Date class declaration.
  * 02 03/04/2026 Heng Kiao Woon - Updated file header.
+ * 03 03/04/2026 Heng Kiao Woon - Added comparison operators for BST ordering.
  */
 
 #ifndef DATE_H_INCLUDED
@@ -124,5 +125,53 @@ istream& operator>>(istream& input, Date& date);
  * @return The same output stream (for chaining).
  */
 ostream& operator<<(ostream& os, const Date& date);
+
+/**
+ * @brief Equality comparison between two Date objects.
+ * @param left Left-hand Date.
+ * @param right Right-hand Date.
+ * @return true if both dates are equal, otherwise false.
+ */
+bool operator==(const Date& left, const Date& right);
+
+/**
+ * @brief Inequality comparison between two Date objects.
+ * @param left Left-hand Date.
+ * @param right Right-hand Date.
+ * @return true if the dates are not equal, otherwise false.
+ */
+bool operator!=(const Date& left, const Date& right);
+
+/**
+ * @brief Less-than comparison between two Date objects.
+ * @param left Left-hand Date.
+ * @param right Right-hand Date.
+ * @return true if @p left is earlier than @p right, otherwise false.
+ */
+bool operator<(const Date& left, const Date& right);
+
+/**
+ * @brief Greater-than comparison between two Date objects.
+ * @param left Left-hand Date.
+ * @param right Right-hand Date.
+ * @return true if @p left is later than @p right, otherwise false.
+ */
+bool operator>(const Date& left, const Date& right);
+
+/**
+ * @brief Less-than-or-equal comparison between two Date objects.
+ * @param left Left-hand Date.
+ * @param right Right-hand Date.
+ * @return true if @p left is earlier than or equal to @p right.
+ */
+bool operator<=(const Date& left, const Date& right);
+
+/**
+ * @brief Greater-than-or-equal comparison between two Date objects.
+ * @param left Left-hand Date.
+ * @param right Right-hand Date.
+ * @return true if @p left is later than or equal to @p right.
+ */
+bool operator>=(const Date& left, const Date& right);
 
 #endif // DATE_H_INCLUDED

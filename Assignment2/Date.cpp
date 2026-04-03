@@ -149,3 +149,48 @@ istream & operator >>(istream & input, Date & date)
     }
     return input;
 }
+
+//----------------------------------------------------------------------------
+// Comparison operators for Date ordering.
+
+bool operator==(const Date& left, const Date& right)
+{
+    return left.GetYear() == right.GetYear()
+        && left.GetMonth() == right.GetMonth()
+        && left.GetDay() == right.GetDay();
+}
+
+bool operator!=(const Date& left, const Date& right)
+{
+    return !(left == right);
+}
+
+bool operator<(const Date& left, const Date& right)
+{
+    if (left.GetYear() != right.GetYear())
+    {
+        return left.GetYear() < right.GetYear();
+    }
+
+    if (left.GetMonth() != right.GetMonth())
+    {
+        return left.GetMonth() < right.GetMonth();
+    }
+
+    return left.GetDay() < right.GetDay();
+}
+
+bool operator>(const Date& left, const Date& right)
+{
+    return right < left;
+}
+
+bool operator<=(const Date& left, const Date& right)
+{
+    return !(right < left);
+}
+
+bool operator>=(const Date& left, const Date& right)
+{
+    return !(left < right);
+}
