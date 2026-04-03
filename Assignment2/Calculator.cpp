@@ -122,38 +122,25 @@ float sPCC(const Vector<float>& x, const Vector<float>& y)
 }
 
 //----------------------------------------------------------------------------
-// Calculates the sample Pearson Correlation Coefficient between two vectors.
-float sPCC(const Vector<float>& x, const Vector<float>& y)
+// Calculates the mean absolute deviation of a vector of floats.
+float mad(const Vector<float>& dataVector)
 {
-    int n = x.Size();
+    int n = dataVector.Size();
 
-    if (n != y.Size() || n <= 1)
+    if (n <= 0)
         return 0.0f;
 
-    float meanX = calculateMean(x);
-    float meanY = calculateMean(y);
-
-    float numerator = 0.0f;
-    float sumSqX = 0.0f;
-    float sumSqY = 0.0f;
+    float mean = calculateMean(dataVector);
+    float sumAbsoluteDeviation = 0.0f;
 
     for (int i = 0; i < n; ++i)
     {
-        float diffX = x[i] - meanX;
-        float diffY = y[i] - meanY;
-
-        numerator += diffX * diffY;
-        sumSqX += diffX * diffX;
-        sumSqY += diffY * diffY;
+        sumAbsoluteDeviation += absoluteValue(dataVector[i] - mean);
     }
 
-    float denominator = squareRoot(sumSqX * sumSqY);
-
-    if (denominator == 0.0f)
-        return 0.0f;
-
-    return numerator / denominator;
+    return sumAbsoluteDeviation / static_cast<float>(n);
 }
+
 
 //----------------------------------------------------------------------------
 // Converts metres/second to kilometres/hour.

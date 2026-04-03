@@ -53,5 +53,9 @@ int main()
     float correlation = sPCC(xValues, yValues);
     std::cout << "sPCC = " << correlation << std::endl << std::endl;
 
+    std::cout << "-- Test 4 (MAD) --" << std::endl;
+    float meanAbsoluteDeviation = mad(values);
+    std::cout << "MAD = " << meanAbsoluteDeviation << std::endl << std::endl;
+
     return 0;
 }

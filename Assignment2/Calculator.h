@@ -61,6 +61,13 @@ float calculateStandardDeviation(const Vector<float>& dataVector);
 float sPCC(const Vector<float>& x, const Vector<float>& y);
 
 /**
+ * @brief Calculates the mean absolute deviation of a numeric vector.
+ * @param dataVector Vector of float values.
+ * @return Mean absolute deviation. Returns 0 if the vector is empty.
+ */
+float mad(const Vector<float>& dataVector);
+
+/**
  * @brief Converts speed from meters per second to kilometers per hour.
  * @param ms Speed in m/s.
  * @return Speed in km/h (ms * 3.6).
