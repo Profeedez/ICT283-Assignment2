@@ -1,0 +1,125 @@
+/**
+ * @file Date.h
+ * @brief Declares the Date class and stream operators.
+ *
+ * Date represents a Gregorian calendar date (day/month/year) with basic
+ * validation rules (including leap years). This class intentionally does not
+ * perform month-name/string conversions; keep conversion logic outside Date to
+ * follow the assignment constraints and single-responsibility principle.
+ *
+ * @author Heng Kiao Woon
+ * @version 01
+ * @date 01/03/2026
+ */
+
+#ifndef DATE_H_INCLUDED
+#define DATE_H_INCLUDED
+
+#include <iostream>
+
+using std::ostream;
+using std::istream;
+
+/**
+ * @class Date
+ * @brief Represents a calendar date (day, month, year) with validation.
+ *
+ * Validation includes:
+ * - month range: 1..12
+ * - day range based on month length and leap year rules
+ *
+ * @bug Does not handle dates before the Gregorian calendar transition.
+ */
+class Date
+{
+public:
+    /**
+     * @brief Constructs a date with default/zero values.
+     * @note The default values depend on your .cpp (often 0/0/0).
+     */
+    Date();
+
+    /**
+     * @brief Constructs a date from day, month, and year (validated).
+     * @param day Day of month.
+     * @param month Month of year (1-12).
+     * @param year Year value.
+     * @note Invalid values are typically corrected to 0 (check your .cpp).
+     */
+    Date(int day, int month, int year);
+
+    /**
+     * @brief Gets the day value.
+     * @return Day of month.
+     */
+    int GetDay() const;
+
+    /**
+     * @brief Sets the day value (validated against current month/year).
+     * @param day New day value.
+     */
+    void SetDay(int day);
+
+    /**
+     * @brief Gets the month value.
+     * @return Month of year (1-12).
+     */
+    int GetMonth() const;
+
+    /**
+     * @brief Sets the month value (may re-validate the current day).
+     * @param month New month value.
+     */
+    void SetMonth(int month);
+
+    /**
+     * @brief Gets the year value.
+     * @return Year value.
+     */
+    int GetYear() const;
+
+    /**
+     * @brief Sets the year value (may re-validate the current day for leap years).
+     * @param year New year value.
+     */
+    void SetYear(int year);
+
+private:
+    int m_day;      ///< Day (typically 1-31; may be 0 if invalid).
+    int m_month;    ///< Month (1-12; may be 0 if invalid).
+    int m_year;     ///< Year.
+
+    /**
+     * @brief Determines whether a given year is a leap year.
+     * @param year Year to test.
+     * @return true if @p year is a leap year; otherwise false.
+     */
+    bool IsLeapYear(int year) const;
+
+    /**
+     * @brief Validates a day value for a given month/year.
+     * @param day Day to validate.
+     * @param month Month to validate against.
+     * @param year Year to validate against (for leap years).
+     * @return A corrected day value (commonly returns 0 when invalid).
+     */
+    int ValidateDay(int day, int month, int year) const;
+};
+
+/**
+ * @brief Extracts a Date from an input stream.
+ * @param input Input stream.
+ * @param date  Date object to receive parsed values.
+ * @return The same input stream (for chaining).
+ */
+istream& operator>>(istream& input, Date& date);
+
+/**
+ * @brief Inserts a Date into an output stream.
+ * @param os   Output stream.
+ * @param date Date to print.
+ * @return The same output stream (for chaining).
+ */
+ostream& operator<<(ostream& os, const Date& date);
+
+#endif // DATE_H_INCLUDED
