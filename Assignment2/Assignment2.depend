@@ -24,20 +24,20 @@
 1775208029 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\utility.h
 	<string>
 
-1775204003 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\time.cpp
+1775233180 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\time.cpp
 	"Time.h"
 
-1775201844 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\time.h
+1775233103 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\time.h
 	<iostream>
 
 1775211490 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\vectortest.cpp
 	"Vector.h"
 	<iostream>
 
-1775208363 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\weatherrectype.cpp
+1775235231 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\weatherrectype.cpp
 	"WeatherRecType.h"
 
-1775208675 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\weatherrectype.h
+1775235213 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\weatherrectype.h
 	"Date.h"
 	"Time.h"
 
@@ -51,5 +51,9 @@
 
 1775232166 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\datetest.cpp
 	"Date.h"
+	<iostream>
+
+1775235014 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\weatherrectypetest.cpp
+	"WeatherRecType.h"
 	<iostream>
 
