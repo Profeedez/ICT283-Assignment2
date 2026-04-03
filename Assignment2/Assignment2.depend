@@ -1,0 +1,51 @@
+# depslib dependency file v1.0
+1775214046 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\calculator.cpp
+	"Calculator.h"
+
+1775213967 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\calculator.h
+	"Vector.h"
+
+1775211492 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\vector.h
+
+1775204027 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\date.cpp
+	"Date.h"
+
+1775204039 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\date.h
+	<iostream>
+
+1775203920 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\menu.cpp
+	"Menu.h"
+	"Utility.h"
+	<iostream>
+	<string>
+
+1775203416 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\menu.h
+
+1775208029 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\utility.h
+	<string>
+
+1775204003 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\time.cpp
+	"Time.h"
+
+1775201844 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\time.h
+	<iostream>
+
+1775211490 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\vectortest.cpp
+	"Vector.h"
+	<iostream>
+
+1775208363 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\weatherrectype.cpp
+	"WeatherRecType.h"
+
+1775208675 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\weatherrectype.h
+	"Date.h"
+	"Time.h"
+
+1775214289 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\calculatortest.cpp
+	"Calculator.h"
+	<iostream>
+
+1775214342 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\utility.cpp
+	"Utility.h"
+	<iostream>
+

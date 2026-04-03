@@ -19,7 +19,6 @@
 #define MENUHANDLER_H_INCLUDED
 
 #include "Menu.h"
-#include "WeatherLogType.h"
 
 /**
  * @class MenuHandler
@@ -32,7 +31,6 @@ public:
      * @brief Constructs a controller with references to the view and model.
      * @param menu Menu UI component.
      */
-    MenuHandler(Menu& menu, const WeatherLogType& log);
 
     /**
      * @brief Runs the main menu loop until the user exits.

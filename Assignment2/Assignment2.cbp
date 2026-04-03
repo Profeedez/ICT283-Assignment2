@@ -33,40 +33,66 @@
 		</Compiler>
 		<Unit filename="Calculator.cpp" />
 		<Unit filename="Calculator.h" />
-		<Unit filename="CalculatorTest.cpp">
+		<Unit filename="CalculatorTest.cpp" />
+		<Unit filename="Date.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="Date.cpp" />
 		<Unit filename="Date.h" />
 		<Unit filename="DateTest.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="Main.cpp" />
-		<Unit filename="Menu.cpp" />
+		<Unit filename="Main.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="Menu.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="Menu.h" />
-		<Unit filename="MenuHandler.cpp" />
+		<Unit filename="MenuHandler.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="MenuHandler.h" />
 		<Unit filename="MenuHandlerTest.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="Time.cpp" />
+		<Unit filename="Time.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="Time.h" />
 		<Unit filename="TimeTest.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="Utility.cpp" />
+		<Unit filename="Utility.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="Utility.h" />
-		<Unit filename="WeatherFileReader.cpp" />
+		<Unit filename="Vector.h" />
+		<Unit filename="VectorTest.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="WeatherFileReader.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="WeatherFileReader.h" />
 		<Unit filename="WeatherFileReaderTest.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="WeatherRecType.cpp" />
+		<Unit filename="WeatherRecType.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Unit filename="WeatherRecType.h" />
 		<Unit filename="WeatherRecTypeTest.cpp">
 			<Option compile="0" />
