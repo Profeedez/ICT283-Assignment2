@@ -1,10 +1,11 @@
 // DateTest.cpp
 //
 // Console test program for the Date class.
-// Tests constructors, setters, getters, and validation.
+// Checks construction, validation, setters, getters, and stream output behaviour.
 //
 // Version
-// 01 01/03/2026 Heng Kiao Woon
+// 01 01/03/2026 Heng Kiao Woon - Unit test for Date.
+// 02 03/04/2026 Heng Kiao Woon - Updated file header.
 //---------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------

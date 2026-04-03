@@ -1,10 +1,11 @@
 // Time.cpp
 //
-// Implementation of the Time class.
-// Provides validation and stream operators for common time formats.
+// Implementation of the Time class and related operators.
+// Provides validation, setters, getters, and stream/comparison support for time values.
 //
 // Version
-// 01 01/03/2026 Heng Kiao Woon
+// 01 01/03/2026 Heng Kiao Woon - Initial Time class implementation.
+// 02 03/04/2026 Heng Kiao Woon - Updated file header.
 //---------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------

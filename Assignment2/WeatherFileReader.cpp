@@ -1,9 +1,12 @@
 // WeatherFileReader.cpp
 //
-// File reading + parsing only.
+// Implementation of weather file loading and parsing functions.
+Reads configured CSV files, detects columns, parses values, and stores records in the weather model.
 //
 // Version
-// 02 01/03/2026 Heng Kiao Woon
+// 01 01/03/2026 Heng Kiao Woon - Initial WeatherFileReader implementation.
+// 02 01/03/2026 Heng Kiao Woon - Refined parsing support and delimiter handling.
+// 03 03/04/2026 Heng Kiao Woon - Updated file header.
 //---------------------------------------------------------------------------------
 
 

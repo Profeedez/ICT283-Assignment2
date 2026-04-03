@@ -1,10 +1,11 @@
 // CalculatorTest.cpp
 //
-// Console test program for Calculator functions.
-// Tests mean and standard deviation calculations.
+// Console test program for Calculator helper functions.
+// Exercises mean and standard deviation routines using simple test data.
 //
 // Version
-// 01 01/03/2026 Heng Kiao Woon
+// 01 01/03/2026 Heng Kiao Woon - Unit Test for Calculator
+// 02 03/04/2026 Heng Kiao Woon - Updated file header
 //---------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------

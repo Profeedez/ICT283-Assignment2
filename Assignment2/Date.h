@@ -1,15 +1,18 @@
 /**
  * @file Date.h
- * @brief Declares the Date class and stream operators.
+ * @brief Declares the Date class and related stream/comparison operators.
  *
- * Date represents a Gregorian calendar date (day/month/year) with basic
- * validation rules (including leap years). This class intentionally does not
- * perform month-name/string conversions; keep conversion logic outside Date to
- * follow the assignment constraints and single-responsibility principle.
+ * The Date class represents a Gregorian calendar date using day, month, and
+ * year fields. It provides simple validation logic, leap-year handling, and
+ * operator support needed by the weather record classes.
  *
  * @author Heng Kiao Woon
- * @version 01
- * @date 01/03/2026
+ * @version 02
+ * @date 03/04/2026
+ *
+ * Version History:
+ * 01 01/03/2026 Heng Kiao Woon - Initial Date class declaration.
+ * 02 03/04/2026 Heng Kiao Woon - Updated file header.
  */
 
 #ifndef DATE_H_INCLUDED

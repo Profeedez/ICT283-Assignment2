@@ -1,21 +1,25 @@
 /**
  * @file WeatherFileReader.h
- * @brief Reads weather CSV files and populates a WeatherLogType.
+ * @brief Declares the WeatherFileReader class for loading weather data from files.
  *
- * This class handles ONLY file reading + parsing (SRP).
- * WeatherLogType handles storage + calculations.
- *
+ * WeatherFileReader is responsible for reading configured CSV input files,
+ * extracting the required weather columns, converting raw text into program
+ * values, and storing the results in the weather data model.
  *
  * @author Heng Kiao Woon
- * @version 02
- * @date 01/03/2026
+ * @version 03
+ * @date 03/04/2026
+ *
+ * Version History:
+ * 01 01/03/2026 Heng Kiao Woon - Initial weather file reader declaration.
+ * 02 01/03/2026 Heng Kiao Woon - Expanded description and data-loading behaviour.
+ * 03 03/04/2026 Heng Kiao Woon - Updated file header, removed WeatherLogType.
  */
 
 #ifndef WEATHERFILEREADER_H_INCLUDED
 #define WEATHERFILEREADER_H_INCLUDED
 
 #include <string>
-#include "WeatherLogType.h"
 
 /**
  * @class WeatherFileReader
@@ -30,17 +34,7 @@
 class WeatherFileReader
 {
 public:
-    /**
-     * @brief Loads weather data using a config file that lists CSV filenames (one per line).
-     *
-     * Supports filenames like:
-     * - "data/MetData-31-3.csv"
-     * - "MetData-31-3.csv" (auto-tries data/ prefix)
-     *
-     * @param log WeatherLogType to populate.
-     * @param configPath Config file path (default: "data/data_source.txt").
-     */
-    void LoadFromConfig(WeatherLogType& log, const std::string& configPath = "data/data_source.txt");
+
 };
 
 #endif // WEATHERFILEREADER_H_INCLUDED

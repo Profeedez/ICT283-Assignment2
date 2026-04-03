@@ -1,15 +1,15 @@
 // MenuHandler.cpp
 //
 // Implementation of the MenuHandler controller.
-// Connects Menu prompts to WeatherLogType calculations and output.
+// Connects menu selections to weather calculations and export features in the program.
 //
 // Version
-// 01 01/03/2026 Heng Kiao Woon
+// 01 01/03/2026 Heng Kiao Woon - Initial MenuHandler implementation.
+// 02 03/04/2026 Heng Kiao Woon - Updated file header.
 //---------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
 // Includes
-
 #include "MenuHandler.h"
 #include "Utility.h"
 #include <fstream>

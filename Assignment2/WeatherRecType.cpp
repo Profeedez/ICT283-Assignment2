@@ -1,13 +1,12 @@
 // WeatherRecType.cpp
 //
-// Implements WeatherRecType, a single weather measurement record containing:
-// - Date and Time
-// - Wind speed, ambient temperature, and solar radiation values
-//
-// This file contains constructors, accessor methods, and comparison operators.
+// Implementation of the WeatherRecType class and related operators.
+// Stores a single weather observation with date, time, wind speed, temperature, and solar radiation.
 //
 // Version
-// 02 01/03/2026 Heng Kiao Woon
+// 01 01/03/2026 Heng Kiao Woon - Initial WeatherRecType implementation.
+// 02 01/03/2026 Heng Kiao Woon - Added comparison operator support.
+// 03 03/04/2026 Heng Kiao Woon - Updated file header.
 //---------------------------------------------------------------------------------
 
 

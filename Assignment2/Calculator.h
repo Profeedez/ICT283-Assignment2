@@ -1,14 +1,18 @@
 /**
  * @file Calculator.h
- * @brief Mathematical helper functions for mean, standard deviation, and unit conversion.
+ * @brief Declares mathematical helper functions used by the weather statistics program.
  *
- * The project does not use the C++ STL math utilities for these operations.
- * Square roots are computed using Newton's method.
+ * This file provides small calculation utilities used throughout the project,
+ * including absolute value, Newton's method square root, arithmetic mean,
+ * standard deviation, and wind-speed unit conversion.
  *
  * @author Heng Kiao Woon
- * @version 01
- * @date 01/03/2026
- */
+ * @version 02
+ * @date 03/04/2026
+ *
+ * Version History:
+ * 01 01/03/2026 Heng Kiao Woon - Initial creation for Assignment 1.
+ * 02 03/04/2026 Heng Kiao Woon - Updated file header
 
 #ifndef CALCULATOR_H_INCLUDED
 #define CALCULATOR_H_INCLUDED

@@ -1,10 +1,12 @@
 // WeatherRecTypeTest.cpp
 //
-// Unit test for WeatherRecType.
-// Demonstrates constructors and getter methods.
+// Console test program for the WeatherRecType class.
+// Checks construction and stored measurement values for a weather record.
 //
 // Version
-// 02 01/03/2026 Heng Kiao Woon
+// 01 01/03/2026 Heng Kiao Woon - Unit Test for WeatherRecType.
+// 02 01/03/2026 Heng Kiao Woon - Expanded constructor and getter checks.
+// 03 03/04/2026 Heng Kiao Woon - Updated file header.
 //---------------------------------------------------------------------------------
 
 

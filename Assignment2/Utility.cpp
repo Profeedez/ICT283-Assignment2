@@ -1,9 +1,13 @@
 // Utility.cpp
 //
-// General helper functions.
+// Shared helper function implementations used across the project.
+Includes string trimming, month conversion, CSV header lookup, and input validation support.
 //
 // Version
-// 02 01/03/2026 Heng Kiao Woon
+// 01 01/03/2026 Heng Kiao Woon - Initial Utility implementation.
+// 02 01/03/2026 Heng Kiao Woon - Expanded parsing and formatting helpers.
+// 03 01/03/2026 Heng Kiao Woon - Added validated integer input support.
+// 04 03/04/2026 Heng Kiao Woon - Updated file header.
 //---------------------------------------------------------------------------------
 
 

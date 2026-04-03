@@ -1,10 +1,11 @@
 // Date.cpp
 //
-// Implementation of the Date class.
-// Provides basic validation, leap-year logic, and stream operators.
+// Implementation of the Date class and related operators.
+// Provides validation, leap-year checking, setters, getters, and stream/comparison support.
 //
 // Version
-// 01 01/03/2026 Heng Kiao Woon
+// 01 01/03/2026 Heng Kiao Woon - Initial Date implementation.
+// 02 03/04/2026 Heng Kiao Woon - Updated file header.
 //---------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------

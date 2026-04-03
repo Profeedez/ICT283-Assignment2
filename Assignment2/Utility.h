@@ -1,15 +1,22 @@
 /**
  * @file Utility.h
- * @brief Declares general helper functions (formatting, parsing helpers, input).
+ * @brief Declares shared helper functions used across the project.
  *
- * Utility functions are intentionally kept outside core model classes to:
- * - avoid mixing UI/parsing with data structures (SRP)
- * - keep Date/Time free of string parsing rules (assignment constraint)
+ * This file contains general-purpose utility routines for whitespace checks,
+ * month-name conversion, trimming, case-insensitive comparisons, CSV header
+ * lookup, and validated integer input.
  *
  * @author Heng Kiao Woon
- * @version 03
- * @date 01/03/2026
+ * @version 04
+ * @date 03/04/2026
+ *
+ * Version History:
+ * 01 01/03/2026 Heng Kiao Woon - Initial Utility declarations.
+ * 02 01/03/2026 Heng Kiao Woon - Expanded parsing and formatting helpers.
+ * 03 01/03/2026 Heng Kiao Woon - Added input validation support.
+ * 04 03/04/2026 Heng Kiao Woon - Updated file header.
  */
+
 #ifndef UTILITY_H_INCLUDED
 #define UTILITY_H_INCLUDED
 

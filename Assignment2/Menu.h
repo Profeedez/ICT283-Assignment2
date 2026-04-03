@@ -1,16 +1,18 @@
 /**
  * @file Menu.h
- * @brief Declares the Menu class (console UI helper).
+ * @brief Declares the Menu class for console-based user interaction.
  *
- * Menu is responsible only for user interaction:
- * - displaying the available options
- * - prompting and validating user input values
- *
- * It does not perform any weather calculations.
+ * The Menu class is the view component of the application. It is responsible
+ * for displaying prompts and collecting validated input values, while keeping
+ * calculation logic outside the user-interface layer.
  *
  * @author Heng Kiao Woon
- * @version 01
- * @date 01/03/2026
+ * @version 02
+ * @date 03/04/2026
+ *
+ * Version History:
+ * 01 01/03/2026 Heng Kiao Woon - Initial Menu class declaration
+ * 02 03/04/2026 Heng Kiao Woon - Updated file header
  */
 
 #ifndef MENU_H_INCLUDED

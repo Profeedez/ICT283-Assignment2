@@ -1,10 +1,11 @@
 // Menu.cpp
 //
-// Implementation of the Menu user-interface helper.
-// Responsible for displaying prompts and collecting validated input.
+// Implementation of the Menu user-interface class.
+// Displays menu text, prompts the user for input, and delegates validation to shared helpers.
 //
 // Version
-// 01 01/03/2026 Heng Kiao Woon
+// 01 01/03/2026 Heng Kiao Woon - Initial Menu class implementation.
+// 02 03/04/2026 Heng Kiao Woon - Updated file header.
 //---------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------

@@ -1,13 +1,18 @@
 /**
  * @file Time.h
- * @brief Declares the Time class and stream operators.
+ * @brief Declares the Time class and related stream/comparison operators.
  *
- * Time represents a time of day (hour, minute, second). Seconds default to 0.
- * Validation rules (range checking)
+ * The Time class represents a time of day using hour, minute, and second
+ * fields. It provides validation and basic operator support required by the
+ * weather record classes.
  *
  * @author Heng Kiao Woon
- * @version 02
- * @date 01/03/2026
+ * @version 03
+ * @date 03/04/2026
+ *
+ * Version History:
+ * 01 01/03/2026 Heng Kiao Woon - Initial Time class declaration.
+ * 02 03/04/2026 Heng Kiao Woon - Updated file header
  */
 
 #ifndef TIME_H_INCLUDED

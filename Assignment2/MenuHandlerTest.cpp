@@ -1,9 +1,11 @@
-// MenuHandlerTest_UPDATED.cpp
+// MenuHandlerTest.cpp
 //
-// Unit test for MenuHandler (interactive).
+// Console integration test program for MenuHandler.
+// Loads sample weather data and runs the menu controller against known input files.
 //
 // Version
-// 02 01/03/2026 Heng Kiao Woon
+// 01 01/03/2026 Heng Kiao Woon - Unit Test for MenuHandler.
+// 02 03/04/2026 Heng Kiao Woon - Updated file header, removed weatherlogtype.
 //---------------------------------------------------------------------------------
 
 
@@ -12,7 +14,6 @@
 #include "Menu.h"
 #include "MenuHandler.h"
 #include "WeatherFileReader.h"
-#include "WeatherLogType.h"
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -77,13 +78,7 @@ int main()
     }
 
     std::cout << "Created test CSV and config files.\n\n";
-
-    std::cout << "-- Test 2 (Load weather data) --\n";
-    WeatherLogType weatherLog;
     WeatherFileReader weatherFileReader;
-    weatherFileReader.LoadFromConfig(weatherLog, configFilePath);
-
-    std::cout << "WeatherLogType size after loading: " << weatherLog.GetSize() << "\n\n";
 
     std::cout << "-- Test 3 (Run MenuHandler) --\n";
     std::cout << "IMPORTANT: To see data, choose:\n";
@@ -93,7 +88,6 @@ int main()
     std::cout << "To end this test, choose option 5 (Quit).\n\n";
 
     Menu menu;
-    MenuHandler menuHandler(menu, weatherLog);
     menuHandler.Run();
 
     std::cout << "\nProcess completed.\n";

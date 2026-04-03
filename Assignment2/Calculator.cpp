@@ -1,10 +1,11 @@
 // Calculator.cpp
 //
-// Mathematical helper functions used by the weather statistics program.
-// Implements absolute value, square root, mean and sample standard deviation.
+// Mathematical helper function implementations used by the weather statistics program.
+// Implements absolute value, square root, mean, standard deviation, and wind-speed conversion routines.
 //
 // Version
-// 01 01/03/2026 Heng Kiao Woon
+// 01 01/03/2026 Heng Kiao Woon - Initial Calculator implementation
+// 02 03/04/2026 Heng Kiao Woon - Updated file header
 //---------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
@@ -59,7 +60,7 @@ float calculateMean(const float dataArray[], int n)
 }
 
 //----------------------------------------------------------------------------
-// Calculates the sample standard deviation (n-1) of an array of floats.
+// Calculates the standard deviation (n-1) of an array of floats.
 float calculateStandardDeviation(const float dataArray[], int n)
 {
     if (dataArray == nullptr || n <= 1)
@@ -80,7 +81,7 @@ float calculateStandardDeviation(const float dataArray[], int n)
         sumSq += diff * diff;
     }
 
-    // Step 3: divide by (n - 1)  → sample standard deviation
+    // Step 3: divide by (n - 1)  → standard deviation
     float variance = sumSq / (n - 1);
 
     // Step 4: square root

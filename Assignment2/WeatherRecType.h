@@ -1,16 +1,18 @@
 /**
  * @file WeatherRecType.h
- * @brief Defines WeatherRecType, a single weather observation record.
+ * @brief Declares the WeatherRecType class for a single weather observation.
  *
- * A WeatherRecType stores the measurement timestamp (Date + Time) and the
- * measured values used by the application:
- * - wind speed (m/s)
- * - ambient temperature ( C)
- * - solar radiation (W/m^2)
+ * A WeatherRecType stores the timestamp of an observation together with the
+ * measured wind speed, ambient temperature, and solar radiation values used by
+ * the program.
  *
  * @author Heng Kiao Woon
- * @version 01
- * @date 01/03/2026
+ * @version 02
+ * @date 03/04/2026
+ *
+ * Version History:
+ * 01 01/03/2026 Heng Kiao Woon - Initial WeatherRecType declaration.
+ * 02 03/04/2026 Heng Kiao Woon - Updated file header.
  */
 
 #ifndef WEATHERRECTYPE_H_INCLUDED
