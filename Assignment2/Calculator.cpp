@@ -4,8 +4,8 @@
 // Implements absolute value, square root, mean, standard deviation, and wind-speed conversion routines.
 //
 // Version
-// 01 01/03/2026 Heng Kiao Woon - Initial Calculator implementation
-// 02 03/04/2026 Heng Kiao Woon - Updated file header
+// 01 01/03/2026 Heng Kiao Woon - Initial Calculator implementation.
+// 02 03/04/2026 Heng Kiao Woon - Updated file header.
 //---------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
