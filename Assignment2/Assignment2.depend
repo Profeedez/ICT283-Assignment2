@@ -13,13 +13,12 @@
 1775231902 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\date.h
 	<iostream>
 
-1775203920 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\menu.cpp
+1775299316 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\menu.cpp
 	"Menu.h"
 	"Utility.h"
 	<iostream>
-	<string>
 
-1775203416 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\menu.h
+1775298882 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\menu.h
 
 1775208029 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\utility.h
 	<string>
@@ -64,19 +63,39 @@
 	"WeatherRecType.h"
 	<iostream>
 
-1775282791 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\weatherbstmapstore.h
+1775298769 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\weatherbstmapstore.h
 	<map>
 	<string>
 	"Bst.h"
 	"WeatherRecType.h"
 
-1775051993 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\bst.h
+1775294919 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\bst.h
 	<iostream>
 
-1775290775 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\weatherbstmapstore.cpp
+1775298768 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\weatherbstmapstore.cpp
 	"WeatherBstMapStore.h"
 	"Calculator.h"
 	"Utility.h"
 	<fstream>
 	<iostream>
+
+1775300132 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\weatherfilereader.cpp
+	"WeatherFileReader.h"
+	"Utility.h"
+	"WeatherRecType.h"
+	"Date.h"
+	"Time.h"
+	<fstream>
+	<iostream>
+
+1775300116 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\weatherfilereader.h
+	<string>
+	"WeatherBstMapStore.h"
+
+1775300370 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\weatherfilereadertest.cpp
+	"WeatherFileReader.h"
+	"WeatherBstMapStore.h"
+	<fstream>
+	<iostream>
+	<string>
 

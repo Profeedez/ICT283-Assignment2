@@ -1,3 +1,4 @@
+//
 // WeatherFileReader.cpp
 //
 // Implementation of weather file loading and parsing functions.
@@ -7,13 +8,16 @@
 // 01 01/03/2026 Heng Kiao Woon - Initial WeatherFileReader implementation.
 // 02 01/03/2026 Heng Kiao Woon - Refined parsing support and delimiter handling.
 // 03 03/04/2026 Heng Kiao Woon - Updated file header.
+// 04 04/04/2026 Heng Kiao Woon - Refactored to load directly into WeatherBstMapStore.
 //---------------------------------------------------------------------------------
-
 
 //----------------------------------------------------------------------------
 // Includes
 #include "WeatherFileReader.h"
 #include "Utility.h"
+#include "WeatherRecType.h"
+#include "Date.h"
+#include "Time.h"
 
 #include <fstream>
 #include <iostream>
@@ -23,8 +27,8 @@
 static char DetectDelimiterCharacter(const std::string& headerLine)
 {
     for (size_t characterIndex = 0;
-            characterIndex < headerLine.length();
-            ++characterIndex)
+         characterIndex < headerLine.length();
+         ++characterIndex)
     {
         if (headerLine[characterIndex] == '\t')
         {
@@ -38,8 +42,8 @@ static char DetectDelimiterCharacter(const std::string& headerLine)
 //----------------------------------------------------------------------------
 // Extracts a field by column index from a delimited line.
 static std::string ExtractFieldByColumnIndex(const std::string& dataLine,
-        int targetColumnIndex,
-        char delimiterCharacter)
+                                             int targetColumnIndex,
+                                             char delimiterCharacter)
 {
     int currentColumnIndex = 0;
     size_t startPosition = 0;
@@ -56,7 +60,8 @@ static std::string ExtractFieldByColumnIndex(const std::string& dataLine,
         }
         else
         {
-            currentCellValue = dataLine.substr(startPosition, delimiterPosition - startPosition);
+            currentCellValue = dataLine.substr(startPosition,
+                                               delimiterPosition - startPosition);
             startPosition = delimiterPosition + 1;
         }
 
@@ -64,9 +69,9 @@ static std::string ExtractFieldByColumnIndex(const std::string& dataLine,
         {
             currentCellValue = Trim(currentCellValue);
 
-            if (!currentCellValue.empty() && currentCellValue.back() == '\r')
+            if (!currentCellValue.empty() && currentCellValue[currentCellValue.length() - 1] == '\r')
             {
-                currentCellValue.pop_back();
+                currentCellValue.erase(currentCellValue.length() - 1);
             }
 
             return currentCellValue;
@@ -79,13 +84,13 @@ static std::string ExtractFieldByColumnIndex(const std::string& dataLine,
 }
 
 //----------------------------------------------------------------------------
-// Parses an integer from a string (manual parse, no sstream).
+// Parses an integer from a string.
 static bool ParseIntegerValue(const std::string& inputText,
                               size_t& currentPosition,
                               int& outputValue)
 {
     while (currentPosition < inputText.length() &&
-            IsWhitespaceCharacter(inputText[currentPosition]))
+           IsWhitespaceCharacter(inputText[currentPosition]))
     {
         ++currentPosition;
     }
@@ -93,7 +98,7 @@ static bool ParseIntegerValue(const std::string& inputText,
     bool isNegativeNumber = false;
 
     if (currentPosition < inputText.length() &&
-            (inputText[currentPosition] == '-' || inputText[currentPosition] == '+'))
+        (inputText[currentPosition] == '-' || inputText[currentPosition] == '+'))
     {
         isNegativeNumber = (inputText[currentPosition] == '-');
         ++currentPosition;
@@ -103,8 +108,8 @@ static bool ParseIntegerValue(const std::string& inputText,
     int numericValue = 0;
 
     while (currentPosition < inputText.length() &&
-            inputText[currentPosition] >= '0' &&
-            inputText[currentPosition] <= '9')
+           inputText[currentPosition] >= '0' &&
+           inputText[currentPosition] <= '9')
     {
         containsDigit = true;
         numericValue = numericValue * 10 + (inputText[currentPosition] - '0');
@@ -121,7 +126,7 @@ static bool ParseIntegerValue(const std::string& inputText,
 }
 
 //----------------------------------------------------------------------------
-// Parses a simple float value (manual parse). Returns false for NA/blank values.
+// Parses a float from text. Returns false for blank/NA/N/A/nan.
 static bool ParseFloatingPointValue(const std::string& rawText, float& outputValue)
 {
     std::string trimmedText = Trim(rawText);
@@ -132,14 +137,13 @@ static bool ParseFloatingPointValue(const std::string& rawText, float& outputVal
     }
 
     if (EqualsIgnoreCase(trimmedText, "NA") ||
-            EqualsIgnoreCase(trimmedText, "N/A") ||
-            EqualsIgnoreCase(trimmedText, "nan"))
+        EqualsIgnoreCase(trimmedText, "N/A") ||
+        EqualsIgnoreCase(trimmedText, "nan"))
     {
         return false;
     }
 
     size_t currentPosition = 0;
-
     bool isNegativeNumber = false;
 
     if (trimmedText[currentPosition] == '-' || trimmedText[currentPosition] == '+')
@@ -152,8 +156,8 @@ static bool ParseFloatingPointValue(const std::string& rawText, float& outputVal
     long long integerPartValue = 0;
 
     while (currentPosition < trimmedText.length() &&
-            trimmedText[currentPosition] >= '0' &&
-            trimmedText[currentPosition] <= '9')
+           trimmedText[currentPosition] >= '0' &&
+           trimmedText[currentPosition] <= '9')
     {
         containsDigit = true;
         integerPartValue = integerPartValue * 10 + (trimmedText[currentPosition] - '0');
@@ -169,8 +173,8 @@ static bool ParseFloatingPointValue(const std::string& rawText, float& outputVal
         double decimalPlaceMultiplier = 0.1;
 
         while (currentPosition < trimmedText.length() &&
-                trimmedText[currentPosition] >= '0' &&
-                trimmedText[currentPosition] <= '9')
+               trimmedText[currentPosition] >= '0' &&
+               trimmedText[currentPosition] <= '9')
         {
             containsDigit = true;
             computedValue += (trimmedText[currentPosition] - '0') * decimalPlaceMultiplier;
@@ -180,7 +184,7 @@ static bool ParseFloatingPointValue(const std::string& rawText, float& outputVal
     }
 
     while (currentPosition < trimmedText.length() &&
-            IsWhitespaceCharacter(trimmedText[currentPosition]))
+           IsWhitespaceCharacter(trimmedText[currentPosition]))
     {
         ++currentPosition;
     }
@@ -272,6 +276,7 @@ static bool ParseTimeHourMinuteSecond(const std::string& timeText, Time& timeObj
     if (currentPosition < timeText.length() && timeText[currentPosition] == ':')
     {
         ++currentPosition;
+
         if (!ParseIntegerValue(timeText, currentPosition, secondValue))
         {
             return false;
@@ -299,12 +304,14 @@ static bool OpenFileWithFallback(const std::string& filePath, std::ifstream& inp
 
     std::string prefixedPath = "data/" + filePath;
     inputStream.open(prefixedPath.c_str());
+
     return inputStream.is_open();
 }
 
 //----------------------------------------------------------------------------
-// Loads a single CSV file into the log.
-static int LoadSingleCsvFileIntoLog(const std::string& csvFilePath, WeatherLogType& log)
+// Loads a single CSV file into the Assignment 2 store.
+static int LoadSingleCsvFileIntoStore(const std::string& csvFilePath,
+                                      WeatherBstMapStore& store)
 {
     std::ifstream csvFileStream;
     if (!OpenFileWithFallback(csvFilePath, csvFileStream))
@@ -321,12 +328,12 @@ static int LoadSingleCsvFileIntoLog(const std::string& csvFilePath, WeatherLogTy
         return 0;
     }
 
-    char delimiterCharacter = DetectDelimiterCharacter(headerLine);
+    const char delimiterCharacter = DetectDelimiterCharacter(headerLine);
 
-    int dateTimeColumnIndex = FindColumnIndex(headerLine, "WAST");
-    int windSpeedColumnIndex = FindColumnIndex(headerLine, "S");
-    int solarRadiationColumnIndex = FindColumnIndex(headerLine, "SR");
-    int temperatureColumnIndex = FindColumnIndex(headerLine, "T");
+    const int dateTimeColumnIndex = FindColumnIndex(headerLine, "WAST");
+    const int windSpeedColumnIndex = FindColumnIndex(headerLine, "S");
+    const int solarRadiationColumnIndex = FindColumnIndex(headerLine, "SR");
+    const int temperatureColumnIndex = FindColumnIndex(headerLine, "T");
 
     if (dateTimeColumnIndex == -1)
     {
@@ -345,20 +352,22 @@ static int LoadSingleCsvFileIntoLog(const std::string& csvFilePath, WeatherLogTy
             continue;
         }
 
-        std::string dateTimeCell = ExtractFieldByColumnIndex(dataLine, dateTimeColumnIndex, delimiterCharacter);
+        const std::string dateTimeCell =
+            ExtractFieldByColumnIndex(dataLine, dateTimeColumnIndex, delimiterCharacter);
+
         if (dateTimeCell.empty())
         {
             continue;
         }
 
-        size_t spacePosition = dateTimeCell.find(' ');
+        const size_t spacePosition = dateTimeCell.find(' ');
         if (spacePosition == std::string::npos)
         {
             continue;
         }
 
-        std::string dateText = dateTimeCell.substr(0, spacePosition);
-        std::string timeText = Trim(dateTimeCell.substr(spacePosition + 1));
+        const std::string dateText = dateTimeCell.substr(0, spacePosition);
+        const std::string timeText = Trim(dateTimeCell.substr(spacePosition + 1));
 
         Date dateObject;
         Time timeObject;
@@ -380,7 +389,9 @@ static int LoadSingleCsvFileIntoLog(const std::string& csvFilePath, WeatherLogTy
         if (windSpeedColumnIndex != -1)
         {
             float parsedValue = 0.0f;
-            if (ParseFloatingPointValue(ExtractFieldByColumnIndex(dataLine, windSpeedColumnIndex, delimiterCharacter), parsedValue))
+            if (ParseFloatingPointValue(
+                    ExtractFieldByColumnIndex(dataLine, windSpeedColumnIndex, delimiterCharacter),
+                    parsedValue))
             {
                 windSpeedValue = parsedValue;
             }
@@ -389,7 +400,9 @@ static int LoadSingleCsvFileIntoLog(const std::string& csvFilePath, WeatherLogTy
         if (solarRadiationColumnIndex != -1)
         {
             float parsedValue = 0.0f;
-            if (ParseFloatingPointValue(ExtractFieldByColumnIndex(dataLine, solarRadiationColumnIndex, delimiterCharacter), parsedValue))
+            if (ParseFloatingPointValue(
+                    ExtractFieldByColumnIndex(dataLine, solarRadiationColumnIndex, delimiterCharacter),
+                    parsedValue))
             {
                 solarRadiationValue = parsedValue;
             }
@@ -398,25 +411,39 @@ static int LoadSingleCsvFileIntoLog(const std::string& csvFilePath, WeatherLogTy
         if (temperatureColumnIndex != -1)
         {
             float parsedValue = 0.0f;
-            if (ParseFloatingPointValue(ExtractFieldByColumnIndex(dataLine, temperatureColumnIndex, delimiterCharacter), parsedValue))
+            if (ParseFloatingPointValue(
+                    ExtractFieldByColumnIndex(dataLine, temperatureColumnIndex, delimiterCharacter),
+                    parsedValue))
             {
                 temperatureValue = parsedValue;
             }
         }
 
-        WeatherRecType weatherRecord(dateObject, timeObject, windSpeedValue, temperatureValue, solarRadiationValue);
-        log.AddRecord(weatherRecord);
+        WeatherRecType weatherRecord(dateObject,
+                                     timeObject,
+                                     windSpeedValue,
+                                     temperatureValue,
+                                     solarRadiationValue);
+
+        store.AddRecord(weatherRecord);
         ++loadedRecordCount;
     }
 
     csvFileStream.close();
-    std::cout << "Successfully loaded " << loadedRecordCount << " records from " << csvFilePath << "\n";
+
+    std::cout << "Successfully loaded "
+              << loadedRecordCount
+              << " records from "
+              << csvFilePath
+              << "\n";
+
     return loadedRecordCount;
 }
 
 //----------------------------------------------------------------------------
-// Main API: load from config list (one filename per line).
-void WeatherFileReader::LoadFromConfig(WeatherLogType& log, const std::string& configPath)
+// Loads all CSV files listed in the specified config file.
+void WeatherFileReader::LoadFromConfig(const std::string& configPath,
+                                       WeatherBstMapStore& store) const
 {
     std::ifstream configFileStream;
     configFileStream.open(configPath.c_str());
@@ -429,7 +456,8 @@ void WeatherFileReader::LoadFromConfig(WeatherLogType& log, const std::string& c
 
     if (!configFileStream.is_open())
     {
-        std::cout << "Error: Could not open " << configPath << " (or data_source.txt)\n";
+        std::cout << "Error: Could not open " << configPath
+                  << " (or data_source.txt)\n";
         return;
     }
 
@@ -444,8 +472,15 @@ void WeatherFileReader::LoadFromConfig(WeatherLogType& log, const std::string& c
             continue;
         }
 
-        LoadSingleCsvFileIntoLog(csvFilePath, log);
+        LoadSingleCsvFileIntoStore(csvFilePath, store);
     }
 
     configFileStream.close();
+}
+
+//----------------------------------------------------------------------------
+// Loads from the default config file.
+void WeatherFileReader::LoadFromConfig(WeatherBstMapStore& store) const
+{
+    LoadFromConfig("data/data_source.txt", store);
 }

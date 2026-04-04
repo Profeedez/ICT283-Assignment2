@@ -82,10 +82,7 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="WeatherFileReader.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
+		<Unit filename="WeatherFileReader.cpp" />
 		<Unit filename="WeatherFileReader.h" />
 		<Unit filename="WeatherFileReaderTest.cpp">
 			<Option compile="0" />
