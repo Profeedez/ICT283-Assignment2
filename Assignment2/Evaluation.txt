@@ -1,0 +1,33 @@
+Evaluation Summary
+
+The program successfully implements a weather data processing system using a combination of Binary Search Tree (BST) and map data structures.
+
+Key Features Implemented:
+• Weather data is loaded from CSV files and correctly parsed.
+• Data is stored efficiently using a BST of YearNode, where each node contains a map of weather records.
+• Menu system allows user interaction for all required operations.
+• Input validation ensures robustness against invalid and non-numeric inputs.
+• Statistical calculations (mean, standard deviation, sPCC) are correctly implemented.
+• Missing data is handled properly by displaying "No Data".
+• Export function generates a correctly formatted CSV output file.
+• BST traversal uses function pointers to maintain flexibility and low coupling.
+
+Design Evaluation:
+• The program demonstrates high cohesion, with each class having a single responsibility.
+• The system is loosely coupled, as components interact through well-defined interfaces.
+• The use of BST reduces search time by organizing data by year.
+• The use of map prevents duplicate entries and enables efficient lookup.
+
+Limitations:
+• The BST is not self-balancing, which may affect performance in worst-case scenarios.
+• Large datasets require noticeable loading time.
+• Memory usage can be high as all data is stored in memory.
+• No advanced indexing (e.g., by month) is implemented.
+
+Alternative Designs Considered:
+• Vector-based storage (rejected due to inefficiency and assignment constraints)
+• Linked list (rejected due to slow traversal)
+• Nested trees (rejected due to complexity)
+
+Conclusion:
+The system meets all assignment requirements and demonstrates correct use of data structures, modular design, and efficient data processing. While improvements can be made, the current implementation is stable, functional, and well-structured.
