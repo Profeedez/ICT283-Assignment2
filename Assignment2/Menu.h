@@ -7,12 +7,13 @@
  * calculation logic outside the user-interface layer.
  *
  * @author Heng Kiao Woon
- * @version 02
- * @date 03/04/2026
+ * @version 03
+ * @date 04/04/2026
  *
  * Version History:
  * 01 01/03/2026 Heng Kiao Woon - Initial Menu class declaration
  * 02 03/04/2026 Heng Kiao Woon - Updated file header
+ * Added MAD calculations for option 4
  */
 
 #ifndef MENU_H_INCLUDED
@@ -39,19 +40,19 @@ public:
      * @brief Prompts the user for a menu choice.
      * @return The chosen option number.
      */
-    int  PromptChoice() const;
+    int PromptChoice() const;
 
     /**
      * @brief Prompts the user for a month (1-12).
      * @return The month number.
      */
-    int  PromptMonth() const;
+    int PromptMonth() const;
 
     /**
      * @brief Prompts the user for a year value.
      * @return The year.
      */
-    int  PromptYear() const;
+    int PromptYear() const;
 
 private:
     /**
@@ -61,8 +62,15 @@ private:
      * @param max Maximum accepted value (inclusive).
      * @return A validated integer in the range [min, max].
      */
-    int GetValidIntegerLine(const char* prompt, int min, int ) const;
-    int GetValidIntegerLine(const char* prompt, int min ) const;
+    int GetValidIntegerLine(const char* prompt, int min, int max) const;
+
+    /**
+     * @brief Reads an integer value from the console with a minimum bound.
+     * @param prompt Text shown to the user.
+     * @param min Minimum accepted value (inclusive).
+     * @return A validated integer greater than or equal to @p min.
+     */
+    int GetValidIntegerLine(const char* prompt, int min) const;
 };
 
 #endif // MENU_H_INCLUDED
