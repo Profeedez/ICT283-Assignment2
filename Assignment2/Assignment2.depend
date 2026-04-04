@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1775214961 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\calculator.cpp
+1775301394 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\calculator.cpp
 	"Calculator.h"
 
 1775214871 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\calculator.h
@@ -98,4 +98,23 @@
 	<fstream>
 	<iostream>
 	<string>
+
+1775300691 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\menuhandlertest.cpp
+	"Menu.h"
+	"MenuHandler.h"
+	"WeatherFileReader.h"
+	"WeatherBstMapStore.h"
+	<fstream>
+	<iostream>
+	<string>
+
+1775302064 c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\menuhandler.h
+	"Menu.h"
+	"WeatherBstMapStore.h"
+
+1775302087 source:c:\users\qiaoy\documents\github\ict283-assignment2\assignment2\menuhandler.cpp
+	"MenuHandler.h"
+	"Utility.h"
+	"Calculator.h"
+	<iostream>
 

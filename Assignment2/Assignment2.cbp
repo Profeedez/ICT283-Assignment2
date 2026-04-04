@@ -54,15 +54,9 @@
 		</Unit>
 		<Unit filename="Menu.cpp" />
 		<Unit filename="Menu.h" />
-		<Unit filename="MenuHandler.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
+		<Unit filename="MenuHandler.cpp" />
 		<Unit filename="MenuHandler.h" />
-		<Unit filename="MenuHandlerTest.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
+		<Unit filename="MenuHandlerTest.cpp" />
 		<Unit filename="Time.cpp" />
 		<Unit filename="Time.h" />
 		<Unit filename="TimeTest.cpp">
