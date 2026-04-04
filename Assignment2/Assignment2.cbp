@@ -31,13 +31,21 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="Calculator.cpp" />
-		<Unit filename="Calculator.h" />
-		<Unit filename="CalculatorTest.cpp" />
-		<Unit filename="Date.cpp">
+		<Unit filename="Bst.h" />
+		<Unit filename="BstTest.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
+		<Unit filename="Calculator.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="Calculator.h" />
+		<Unit filename="CalculatorTest.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="Date.cpp" />
 		<Unit filename="Date.h" />
 		<Unit filename="DateTest.cpp">
 			<Option compile="0" />
@@ -61,10 +69,7 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="Time.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
+		<Unit filename="Time.cpp" />
 		<Unit filename="Time.h" />
 		<Unit filename="TimeTest.cpp">
 			<Option compile="0" />
@@ -89,15 +94,9 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="WeatherRecType.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
+		<Unit filename="WeatherRecType.cpp" />
 		<Unit filename="WeatherRecType.h" />
-		<Unit filename="WeatherRecTypeTest.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
+		<Unit filename="WeatherRecTypeTest.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
