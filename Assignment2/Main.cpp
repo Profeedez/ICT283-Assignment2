@@ -9,22 +9,25 @@
  * Design:
  * - Uses Menu for UI display.
  * - Uses MenuHandler as controller.
+ * - Uses WeatherBstMapStore as data model.
  *
  * @author
  * Heng Kiao Woon
  *
- * @version 02
- * @date 03/04/2026
+ * @version 03
+ * @date 04/04/2026
  *
  * Version History:
  * 01 01/03/2026 Heng Kiao Woon - Initial main program setup.
  * 02 03/04/2026 Heng Kiao Woon - Updated file header.
+ * 03 04/04/2026 Heng Kiao Woon - Refactored to use BST store for Assignment 2.
  */
 
-#include "WeatherLogType.h"
 #include "Menu.h"
 #include "MenuHandler.h"
 #include "WeatherFileReader.h"
+#include "WeatherBstMapStore.h"
+#include <iostream>
 
 /**
  * @brief Main function of the program.
@@ -36,12 +39,17 @@
  */
 int main()
 {
+    WeatherBstMapStore store;
+    WeatherFileReader reader;
 
-    WeatherFileReader weatherFileReader;
-    weatherFileReader.LoadFromConfig(log);
+    std::cout << "Loading data...\n";
+
+    reader.LoadFromConfig("data/data_source.txt", store);
+
+    std::cout << "Data loaded successfully.\n\n";
 
     Menu menu;
-    MenuHandler handler(menu, log);
+    MenuHandler handler(menu, store);
     handler.Run();
 
     return 0;
