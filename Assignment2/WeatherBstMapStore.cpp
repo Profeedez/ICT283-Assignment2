@@ -6,6 +6,7 @@
 //
 // Version
 // 01 01/03/2026 Heng Kiao Woon - Initial WeatherBstMapStore implementation.
+// 02 04/04/2026 Heng Kiao Woon - Added MAD calculations for option 4.
 //---------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
@@ -347,6 +348,31 @@ float WeatherBstMapStore::FindSpeedStandardDeviation(int month, int year) const
     return calculateStandardDeviation(speedValues);
 }
 
+float WeatherBstMapStore::FindSpeedMad(int month, int year) const
+{
+    const YearNode* yearNode = LocateYearNode(m_yearTree, year);
+    const Bst<WeatherRecType>* monthTree = LocateMonthTree(yearNode, month);
+
+    if (monthTree == nullptr)
+    {
+        return 0.0f;
+    }
+
+    Vector<float> speedValues;
+    g_speedValues = &speedValues;
+
+    monthTree->inorderTraversal(CollectSpeedValue);
+
+    g_speedValues = nullptr;
+
+    if (speedValues.Size() == 0)
+    {
+        return 0.0f;
+    }
+
+    return mad(speedValues);
+}
+
 //----------------------------------------------------------------------------
 // Temperature calculations
 float WeatherBstMapStore::FindTemperatureMean(int month, int year) const
@@ -397,6 +423,31 @@ float WeatherBstMapStore::FindTemperatureStandardDeviation(int month, int year) 
     }
 
     return calculateStandardDeviation(temperatureValues);
+}
+
+float WeatherBstMapStore::FindTemperatureMad(int month, int year) const
+{
+    const YearNode* yearNode = LocateYearNode(m_yearTree, year);
+    const Bst<WeatherRecType>* monthTree = LocateMonthTree(yearNode, month);
+
+    if (monthTree == nullptr)
+    {
+        return 0.0f;
+    }
+
+    Vector<float> temperatureValues;
+    g_temperatureValues = &temperatureValues;
+
+    monthTree->inorderTraversal(CollectTemperatureValue);
+
+    g_temperatureValues = nullptr;
+
+    if (temperatureValues.Size() == 0)
+    {
+        return 0.0f;
+    }
+
+    return mad(temperatureValues);
 }
 
 //----------------------------------------------------------------------------
@@ -525,7 +576,9 @@ void WeatherBstMapStore::ExportSummaryCSV(int year, const std::string& outputFil
         return;
     }
 
-    out << "Month,Average Wind Speed(stdev),Average Ambient Temperature(stdev),Solar Radiation\n";
+    out << year << "\n";
+
+    bool hasAnyData = false;
 
     for (int month = 1; month <= 12; ++month)
     {
@@ -538,10 +591,16 @@ void WeatherBstMapStore::ExportSummaryCSV(int year, const std::string& outputFil
             continue;
         }
 
+        hasAnyData = true;
+
         const float meanSpeed = FindSpeedMean(month, year);
         const float sdSpeed = FindSpeedStandardDeviation(month, year);
+        const float madSpeed = FindSpeedMad(month, year);
+
         const float meanTemp = FindTemperatureMean(month, year);
         const float sdTemp = FindTemperatureStandardDeviation(month, year);
+        const float madTemp = FindTemperatureMad(month, year);
+
         const float totalSolar = FindTotalSolar(month, year);
 
         out << ConvertMonth(month) << ",";
@@ -549,14 +608,19 @@ void WeatherBstMapStore::ExportSummaryCSV(int year, const std::string& outputFil
         if (hasWind)
         {
             out << (meanSpeed * 3.6f) << "("
-                << (sdSpeed * 3.6f) << ")";
+                << (sdSpeed * 3.6f) << ", "
+                << (madSpeed * 3.6f) << ")";
         }
+
         out << ",";
 
         if (hasTemp)
         {
-            out << meanTemp << "(" << sdTemp << ")";
+            out << meanTemp << "("
+                << sdTemp << ", "
+                << madTemp << ")";
         }
+
         out << ",";
 
         if (hasSolar)
@@ -565,6 +629,11 @@ void WeatherBstMapStore::ExportSummaryCSV(int year, const std::string& outputFil
         }
 
         out << "\n";
+    }
+
+    if (!hasAnyData)
+    {
+        out << "No Data\n";
     }
 
     out.close();

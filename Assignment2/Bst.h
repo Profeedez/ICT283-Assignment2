@@ -42,6 +42,14 @@
 template <class T>
 struct nodeType
 {
+    /**
+     * @brief Default constructor.
+     */
+    nodeType()
+        : info(), lLink(nullptr), rLink(nullptr)
+    {
+    }
+
     T info;               /**< Data stored in the node. */
     nodeType<T>* lLink;   /**< Pointer to the left child node. */
     nodeType<T>* rLink;   /**< Pointer to the right child node. */
@@ -330,60 +338,34 @@ private:
 
 // ========================= BinaryTree Implementation =========================
 
-/**
- * @brief Determines whether the tree is empty.
- * @return True if root is nullptr, otherwise false.
- */
 template <class T>
 bool BinaryTree<T>::isEmpty() const
 {
     return this->root == nullptr;
 }
 
-/**
- * @brief Default constructor.
- *
- * Initializes the tree as empty.
- */
 template <class T>
 BinaryTree<T>::BinaryTree()
+    : root(nullptr)
 {
-    root = nullptr;
 }
 
-/**
- * @brief Copy constructor.
- * @param otherTree The tree to copy from.
- */
 template <class T>
 BinaryTree<T>::BinaryTree(const BinaryTree<T>& otherTree)
+    : root(nullptr)
 {
-    if (otherTree.root == nullptr)
-    {
-        root = nullptr;
-    }
-    else
+    if (otherTree.root != nullptr)
     {
         copyTree(root, otherTree.root);
     }
 }
 
-/**
- * @brief Destructor.
- *
- * Deallocates all nodes in the tree.
- */
 template <class T>
 BinaryTree<T>::~BinaryTree()
 {
     destroy(root);
 }
 
-/**
- * @brief Overloads the assignment operator.
- * @param otherTree The tree to copy from.
- * @return A reference to this tree after assignment.
- */
 template <class T>
 const BinaryTree<T>& BinaryTree<T>::operator=(const BinaryTree<T>& otherTree)
 {
@@ -391,119 +373,79 @@ const BinaryTree<T>& BinaryTree<T>::operator=(const BinaryTree<T>& otherTree)
     {
         destroy(root);
 
-        if (otherTree.root == nullptr)
+        if (otherTree.root != nullptr)
         {
-            root = nullptr;
+            copyTree(root, otherTree.root);
         }
         else
         {
-            copyTree(root, otherTree.root);
+            root = nullptr;
         }
     }
 
     return *this;
 }
 
-/**
- * @brief Destroys the entire tree.
- */
 template <class T>
 void BinaryTree<T>::destroyTree()
 {
     destroy(root);
 }
 
-/**
- * @brief Performs an inorder traversal and prints node values.
- */
 template <class T>
 void BinaryTree<T>::inorderTraversal() const
 {
     inorder(root);
 }
 
-/**
- * @brief Performs a preorder traversal and prints node values.
- */
 template <class T>
 void BinaryTree<T>::preorderTraversal() const
 {
     preorder(root);
 }
 
-/**
- * @brief Performs a postorder traversal and prints node values.
- */
 template <class T>
 void BinaryTree<T>::postorderTraversal() const
 {
     postorder(root);
 }
 
-/**
- * @brief Performs an inorder traversal using a callback.
- * @param visit Pointer to a callback function.
- */
 template <class T>
 void BinaryTree<T>::inorderTraversal(void (*visit)(T&))
 {
     inorder(root, visit);
 }
 
-/**
- * @brief Performs a preorder traversal using a callback.
- * @param visit Pointer to a callback function.
- */
 template <class T>
 void BinaryTree<T>::preorderTraversal(void (*visit)(T&))
 {
     preorder(root, visit);
 }
 
-/**
- * @brief Performs a postorder traversal using a callback.
- * @param visit Pointer to a callback function.
- */
 template <class T>
 void BinaryTree<T>::postorderTraversal(void (*visit)(T&))
 {
     postorder(root, visit);
 }
 
-/**
- * @brief Performs an inorder traversal using a read-only callback.
- * @param visit Pointer to a callback function.
- */
 template <class T>
 void BinaryTree<T>::inorderTraversal(void (*visit)(const T&)) const
 {
     inorder(root, visit);
 }
 
-/**
- * @brief Performs a preorder traversal using a read-only callback.
- * @param visit Pointer to a callback function.
- */
 template <class T>
 void BinaryTree<T>::preorderTraversal(void (*visit)(const T&)) const
 {
     preorder(root, visit);
 }
 
-/**
- * @brief Performs a postorder traversal using a read-only callback.
- * @param visit Pointer to a callback function.
- */
 template <class T>
 void BinaryTree<T>::postorderTraversal(void (*visit)(const T&)) const
 {
     postorder(root, visit);
 }
 
-/**
- * @brief Performs an inorder traversal of a subtree.
- * @param pointer Pointer to the subtree root.
- */
 template <class T>
 void BinaryTree<T>::inorder(nodeType<T>* pointer) const
 {
@@ -515,10 +457,6 @@ void BinaryTree<T>::inorder(nodeType<T>* pointer) const
     }
 }
 
-/**
- * @brief Performs a preorder traversal of a subtree.
- * @param pointer Pointer to the subtree root.
- */
 template <class T>
 void BinaryTree<T>::preorder(nodeType<T>* pointer) const
 {
@@ -530,10 +468,6 @@ void BinaryTree<T>::preorder(nodeType<T>* pointer) const
     }
 }
 
-/**
- * @brief Performs a postorder traversal of a subtree.
- * @param pointer Pointer to the subtree root.
- */
 template <class T>
 void BinaryTree<T>::postorder(nodeType<T>* pointer) const
 {
@@ -545,11 +479,6 @@ void BinaryTree<T>::postorder(nodeType<T>* pointer) const
     }
 }
 
-/**
- * @brief Performs an inorder traversal and applies a callback.
- * @param pointer Pointer to the subtree root.
- * @param visit Pointer to a callback function.
- */
 template <class T>
 void BinaryTree<T>::inorder(nodeType<T>* pointer, void (*visit)(T&))
 {
@@ -561,11 +490,6 @@ void BinaryTree<T>::inorder(nodeType<T>* pointer, void (*visit)(T&))
     }
 }
 
-/**
- * @brief Performs a preorder traversal and applies a callback.
- * @param pointer Pointer to the subtree root.
- * @param visit Pointer to a callback function.
- */
 template <class T>
 void BinaryTree<T>::preorder(nodeType<T>* pointer, void (*visit)(T&))
 {
@@ -577,11 +501,6 @@ void BinaryTree<T>::preorder(nodeType<T>* pointer, void (*visit)(T&))
     }
 }
 
-/**
- * @brief Performs a postorder traversal and applies a callback.
- * @param pointer Pointer to the subtree root.
- * @param visit Pointer to a callback function.
- */
 template <class T>
 void BinaryTree<T>::postorder(nodeType<T>* pointer, void (*visit)(T&))
 {
@@ -593,11 +512,6 @@ void BinaryTree<T>::postorder(nodeType<T>* pointer, void (*visit)(T&))
     }
 }
 
-/**
- * @brief Performs an inorder traversal and applies a read-only callback.
- * @param pointer Pointer to the subtree root.
- * @param visit Pointer to a callback function.
- */
 template <class T>
 void BinaryTree<T>::inorder(nodeType<T>* pointer, void (*visit)(const T&)) const
 {
@@ -609,11 +523,6 @@ void BinaryTree<T>::inorder(nodeType<T>* pointer, void (*visit)(const T&)) const
     }
 }
 
-/**
- * @brief Performs a preorder traversal and applies a read-only callback.
- * @param pointer Pointer to the subtree root.
- * @param visit Pointer to a callback function.
- */
 template <class T>
 void BinaryTree<T>::preorder(nodeType<T>* pointer, void (*visit)(const T&)) const
 {
@@ -625,11 +534,6 @@ void BinaryTree<T>::preorder(nodeType<T>* pointer, void (*visit)(const T&)) cons
     }
 }
 
-/**
- * @brief Performs a postorder traversal and applies a read-only callback.
- * @param pointer Pointer to the subtree root.
- * @param visit Pointer to a callback function.
- */
 template <class T>
 void BinaryTree<T>::postorder(nodeType<T>* pointer, void (*visit)(const T&)) const
 {
@@ -641,11 +545,6 @@ void BinaryTree<T>::postorder(nodeType<T>* pointer, void (*visit)(const T&)) con
     }
 }
 
-/**
- * @brief Makes a deep copy of a subtree.
- * @param copiedTreeRoot Reference to the copied subtree root pointer.
- * @param otherTreeRoot Pointer to the source subtree root.
- */
 template <class T>
 void BinaryTree<T>::copyTree(nodeType<T>*& copiedTreeRoot, nodeType<T>* otherTreeRoot)
 {
@@ -665,10 +564,6 @@ void BinaryTree<T>::copyTree(nodeType<T>*& copiedTreeRoot, nodeType<T>* otherTre
     }
 }
 
-/**
- * @brief Destroys a subtree.
- * @param pointer Reference to the subtree root pointer.
- */
 template <class T>
 void BinaryTree<T>::destroy(nodeType<T>*& pointer)
 {
@@ -683,23 +578,12 @@ void BinaryTree<T>::destroy(nodeType<T>*& pointer)
 
 // ========================= Bst Implementation =========================
 
-/**
- * @brief Determines whether an item exists in the BST.
- * @param searchItem The item to search for.
- * @return True if found, otherwise false.
- */
 template <class T>
 bool Bst<T>::search(const T& searchItem) const
 {
     return searchRec(this->root, searchItem);
 }
 
-/**
- * @brief Recursively searches for an item in the BST.
- * @param current Pointer to the current subtree root.
- * @param searchItem The item to search for.
- * @return True if found, otherwise false.
- */
 template <class T>
 bool Bst<T>::searchRec(nodeType<T>* current, const T& searchItem) const
 {
@@ -721,23 +605,12 @@ bool Bst<T>::searchRec(nodeType<T>* current, const T& searchItem) const
     return searchRec(current->rLink, searchItem);
 }
 
-/**
- * @brief Inserts an item into the BST.
- * @param insertItem The item to insert.
- * @return True if inserted successfully, false if duplicate.
- */
 template <class T>
 bool Bst<T>::insert(const T& insertItem)
 {
     return insertRec(this->root, insertItem);
 }
 
-/**
- * @brief Recursively inserts an item into the BST.
- * @param current Reference to the current subtree root pointer.
- * @param insertItem The item to insert.
- * @return True if inserted, false if duplicate.
- */
 template <class T>
 bool Bst<T>::insertRec(nodeType<T>*& current, const T& insertItem)
 {
@@ -763,21 +636,12 @@ bool Bst<T>::insertRec(nodeType<T>*& current, const T& insertItem)
     }
 }
 
-/**
- * @brief Deletes an item from the BST.
- * @param deleteItem The item to delete.
- */
 template <class T>
 void Bst<T>::deleteNode(const T& deleteItem)
 {
     deleteRec(this->root, deleteItem);
 }
 
-/**
- * @brief Recursively deletes an item from the BST.
- * @param current Reference to the current subtree root pointer.
- * @param deleteItem The item to delete.
- */
 template <class T>
 void Bst<T>::deleteRec(nodeType<T>*& current, const T& deleteItem)
 {
@@ -799,15 +663,6 @@ void Bst<T>::deleteRec(nodeType<T>*& current, const T& deleteItem)
     }
 }
 
-/**
- * @brief Deletes the node pointed to by current.
- * @param current Reference to the node pointer to delete from.
- *
- * Handles the cases where the node has:
- * - no children
- * - one child
- * - two children
- */
 template <class T>
 void Bst<T>::deleteFromTree(nodeType<T>*& current)
 {

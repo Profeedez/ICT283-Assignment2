@@ -19,7 +19,7 @@
  * - each month stores its weather records in a BST ordered by date and time
  *
  * @author Heng Kiao Woon
- * @version 04
+ * @version 05
  * @date 04/04/2026
  *
  * Version History:
@@ -27,6 +27,7 @@
  * 02 04/04/2026 Heng Kiao Woon - Removed WeatherLogType and refactored for Assignment 2.
  * 03 04/04/2026 Heng Kiao Woon - Updated documentation and aligned with WeatherRecType design.
  * 04 04/04/2026 Heng Kiao Woon - Redesigned store to use Bst<YearNode> with monthly BST map.
+ * 05 04/04/2026 Heng Kiao Woon - Added MAD calculations for option 4.
  */
 
 #ifndef WEATHERBSTMAPSTORE_H_INCLUDED
@@ -128,7 +129,7 @@ bool operator>=(const YearNode& left, const YearNode& right);
  * This class supports:
  * - insertion of records into the correct year and month structure
  * - record lookup
- * - monthly mean and standard deviation calculations
+ * - monthly mean, standard deviation, and mean absolute deviation calculations
  * - monthly solar radiation totals
  * - monthly validity checks
  * - Pearson correlation calculations across all years for a selected month
@@ -191,6 +192,14 @@ public:
     float FindSpeedStandardDeviation(int month, int year) const;
 
     /**
+     * @brief Calculates mean absolute deviation of wind speed for a month in a year.
+     * @param month The month to process (1-12).
+     * @param year The year to process.
+     * @return MAD, or 0.0f if no valid data exists.
+     */
+    float FindSpeedMad(int month, int year) const;
+
+    /**
      * @brief Calculates the mean ambient temperature for a month in a year.
      * @param month The month to process (1-12).
      * @param year The year to process.
@@ -205,6 +214,14 @@ public:
      * @return Sample standard deviation, or 0.0f if insufficient valid data exists.
      */
     float FindTemperatureStandardDeviation(int month, int year) const;
+
+    /**
+     * @brief Calculates mean absolute deviation of ambient temperature for a month in a year.
+     * @param month The month to process (1-12).
+     * @param year The year to process.
+     * @return MAD, or 0.0f if no valid data exists.
+     */
+    float FindTemperatureMad(int month, int year) const;
 
     /**
      * @brief Calculates the total solar radiation for a month in a year.

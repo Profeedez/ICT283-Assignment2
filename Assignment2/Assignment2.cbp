@@ -36,10 +36,7 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="Calculator.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
+		<Unit filename="Calculator.cpp" />
 		<Unit filename="Calculator.h" />
 		<Unit filename="CalculatorTest.cpp">
 			<Option compile="0" />
@@ -75,13 +72,16 @@
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
-		<Unit filename="Utility.cpp">
-			<Option compile="0" />
-			<Option link="0" />
-		</Unit>
+		<Unit filename="Utility.cpp" />
 		<Unit filename="Utility.h" />
 		<Unit filename="Vector.h" />
 		<Unit filename="VectorTest.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="WeatherBstMapStore.cpp" />
+		<Unit filename="WeatherBstMapStore.h" />
+		<Unit filename="WeatherBstMapStoreTest.cpp">
 			<Option compile="0" />
 			<Option link="0" />
 		</Unit>
@@ -96,7 +96,10 @@
 		</Unit>
 		<Unit filename="WeatherRecType.cpp" />
 		<Unit filename="WeatherRecType.h" />
-		<Unit filename="WeatherRecTypeTest.cpp" />
+		<Unit filename="WeatherRecTypeTest.cpp">
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

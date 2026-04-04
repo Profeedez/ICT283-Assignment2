@@ -7,6 +7,7 @@
 // Version
 // 01 04/04/2026 Heng Kiao Woon - Initial WeatherBstMapStore unit test.
 // 02 04/04/2026 Heng Kiao Woon - Updated for BST-of-years design.
+// 03 04/04/2026 Heng Kiao Woon - Added MAD tests.
 //---------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
@@ -20,7 +21,7 @@
 
 //----------------------------------------------------------------------------
 // Helper functions
-void PrintTestResult(const std::string& testName, bool passed)
+static void PrintTestResult(const std::string& testName, bool passed)
 {
     std::cout << testName << ": "
               << (passed ? "PASSED" : "FAILED")
@@ -105,12 +106,20 @@ int main()
     bool test19 = (solarTotal2016 > 0.10f);
     PrintTestResult("Test 19 - March 2016 solar total computed", test19);
 
+    float speedMad2016 = store.FindSpeedMad(3, 2016);
+    bool test20 = (speedMad2016 > 0.9f && speedMad2016 < 1.1f);
+    PrintTestResult("Test 20 - March 2016 speed MAD is correct", test20);
+
+    float tempMad2016 = store.FindTemperatureMad(3, 2016);
+    bool test21 = (tempMad2016 > 0.9f && tempMad2016 < 1.1f);
+    PrintTestResult("Test 21 - March 2016 temperature MAD is correct", test21);
+
     float st = 0.0f;
     float sr = 0.0f;
     float tr = 0.0f;
     store.FindSPCCForMonthAllYears(3, st, sr, tr);
-    bool test20 = true;
-    PrintTestResult("Test 20 - SPCC call completed for March", test20);
+    bool test22 = true;
+    PrintTestResult("Test 22 - SPCC call completed for March", test22);
 
     //----------------------------------------------------------------------------
     // Overall result
@@ -118,7 +127,8 @@ int main()
                          !insertedDuplicate && inserted2 && inserted3 &&
                          inserted4 && test9 && test10 && test11 &&
                          test12 && test13 && test14 && test15 &&
-                         test16 && test17 && test18 && test19 && test20;
+                         test16 && test17 && test18 && test19 &&
+                         test20 && test21 && test22;
 
     std::cout << "\nOverall Result: "
               << (overallPassed ? "PASSED" : "FAILED")
