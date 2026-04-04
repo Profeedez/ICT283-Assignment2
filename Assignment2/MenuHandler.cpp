@@ -134,6 +134,6 @@ void MenuHandler::HandleOption3()
 void MenuHandler::HandleOption4()
 {
     const int year = m_menu.PromptYear();
-    m_store.ExportSummaryCSV(year, "WindTempSolar.csv");
+    m_store.ExportSummaryCSV(year, "data/WindTempSolar.csv");
     std::cout << "Exported to WindTempSolar.csv\n";
 }

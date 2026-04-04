@@ -1,6 +1,6 @@
 /**
  * @file WeatherBstMapStore.h
- * @brief Stores weather records using a BST of years and a map of monthly BSTs.
+ * @brief Stores weather records using a BST of years and a map of monthly buckets.
  *
  * This class is the Assignment 2 weather store.
  *
@@ -11,15 +11,24 @@
  * where each YearNode contains:
  *
  *  int year
- *  std::map<int, Bst<WeatherRecType> > recordsByMonth
+ *  std::map<int, MonthBucket> recordsByMonth
+ *
+ * and each MonthBucket contains:
+ *
+ *  std::map<int, Vector<WeatherRecType> > recordsByDay
  *
  * This means:
  * - the outer BST groups data by year
  * - the inner map groups data by month
- * - each month stores its weather records in a BST ordered by date and time
+ * - each month groups records by day
+ * - each day stores weather records in a Vector ordered by file input sequence
+ *
+ * This optimized design avoids inserting chronologically sorted weather data
+ * into an unbalanced monthly BST, which previously caused poor loading
+ * performance for large files.
  *
  * @author Heng Kiao Woon
- * @version 05
+ * @version 07
  * @date 04/04/2026
  *
  * Version History:
@@ -28,6 +37,8 @@
  * 03 04/04/2026 Heng Kiao Woon - Updated documentation and aligned with WeatherRecType design.
  * 04 04/04/2026 Heng Kiao Woon - Redesigned store to use Bst<YearNode> with monthly BST map.
  * 05 04/04/2026 Heng Kiao Woon - Added MAD calculations for option 4.
+ * 06 04/04/2026 Heng Kiao Woon - Identified loading slowdown caused by skewed monthly BST insertion.
+ * 07 04/04/2026 Heng Kiao Woon - Optimized monthly storage using MonthBucket with day grouping and cached statistics.
  */
 
 #ifndef WEATHERBSTMAPSTORE_H_INCLUDED
@@ -37,6 +48,84 @@
 #include <string>
 #include "Bst.h"
 #include "WeatherRecType.h"
+#include "Vector.h"
+
+/**
+ * @struct MonthBucket
+ * @brief Stores all weather records and cached statistics for one month.
+ *
+ * Each MonthBucket stores:
+ * - a map from day number to a Vector of WeatherRecType records
+ * - cached wind speed values for MAD calculation
+ * - cached temperature values for MAD calculation
+ * - running totals and counts for mean and standard deviation
+ * - accumulated solar radiation total
+ *
+ * This structure improves loading performance because appending to a Vector
+ * is much faster than repeatedly inserting sorted data into an unbalanced BST.
+ */
+struct MonthBucket
+{
+    /**
+     * @brief Default constructor.
+     */
+    MonthBucket();
+
+    /**
+     * @brief Map of day to weather records for that day.
+     */
+    std::map<int, Vector<WeatherRecType> > recordsByDay;
+
+    /**
+     * @brief Cached valid wind speed values for MAD calculation.
+     */
+    Vector<float> windValues;
+
+    /**
+     * @brief Cached valid temperature values for MAD calculation.
+     */
+    Vector<float> temperatureValues;
+
+    /**
+     * @brief Number of valid wind speed values.
+     */
+    int validWindCount;
+
+    /**
+     * @brief Sum of valid wind speed values.
+     */
+    float windSum;
+
+    /**
+     * @brief Sum of squares of valid wind speed values.
+     */
+    float windSumSquares;
+
+    /**
+     * @brief Number of valid ambient temperature values.
+     */
+    int validTemperatureCount;
+
+    /**
+     * @brief Sum of valid ambient temperature values.
+     */
+    float temperatureSum;
+
+    /**
+     * @brief Sum of squares of valid ambient temperature values.
+     */
+    float temperatureSumSquares;
+
+    /**
+     * @brief True if at least one valid solar radiation value exists.
+     */
+    bool hasValidSolar;
+
+    /**
+     * @brief Total solar radiation for the month.
+     */
+    float totalSolar;
+};
 
 /**
  * @struct YearNode
@@ -44,7 +133,7 @@
  *
  * Each YearNode stores:
  * - the year key used for BST ordering
- * - a map from month number to a BST of WeatherRecType records for that month
+ * - a map from month number to a MonthBucket for that month
  *
  * The BST ordering of YearNode depends only on the year field.
  */
@@ -67,11 +156,11 @@ struct YearNode
     int year;
 
     /**
-     * @brief Map of month to BST of weather records.
+     * @brief Map of month to MonthBucket of weather records.
      *
      * Month keys are 1 to 12.
      */
-    mutable std::map<int, Bst<WeatherRecType> > recordsByMonth;
+    mutable std::map<int, MonthBucket> recordsByMonth;
 };
 
 /**
@@ -127,7 +216,7 @@ bool operator>=(const YearNode& left, const YearNode& right);
  * @brief Stores and processes weather records using a BST of YearNode objects.
  *
  * This class supports:
- * - insertion of records into the correct year and month structure
+ * - insertion of records into the correct year, month, and day structure
  * - record lookup
  * - monthly mean, standard deviation, and mean absolute deviation calculations
  * - monthly solar radiation totals
@@ -144,10 +233,13 @@ public:
     WeatherBstMapStore();
 
     /**
-     * @brief Inserts a record into the correct year and month structure.
+     * @brief Inserts a record into the correct year, month, and day structure.
      *
      * The year is used to locate or create a YearNode in the outer BST.
-     * The month is then used to locate or create a monthly BST inside that year.
+     * The month is then used to locate or create a MonthBucket inside that year.
+     * The day is then used to locate or create a Vector of WeatherRecType records.
+     *
+     * Cached statistics are updated immediately after successful insertion.
      *
      * @param record The weather record to insert.
      * @return True if inserted successfully, false if it is a duplicate.

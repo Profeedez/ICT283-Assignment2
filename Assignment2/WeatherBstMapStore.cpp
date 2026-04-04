@@ -2,11 +2,12 @@
 //
 // Implementation of the WeatherBstMapStore class.
 // Stores weather records using an outer BST of years,
-// where each year node contains a map of monthly BSTs.
+// where each year node contains a map of monthly buckets.
 //
 // Version
 // 01 01/03/2026 Heng Kiao Woon - Initial WeatherBstMapStore implementation.
 // 02 04/04/2026 Heng Kiao Woon - Added MAD calculations for option 4.
+// 03 04/04/2026 Heng Kiao Woon - Optimized monthly storage using MonthBucket and cached statistics.
 //---------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
@@ -17,6 +18,23 @@
 
 #include <fstream>
 #include <iostream>
+
+//----------------------------------------------------------------------------
+// MonthBucket functions
+MonthBucket::MonthBucket()
+    : recordsByDay(),
+      windValues(),
+      temperatureValues(),
+      validWindCount(0),
+      windSum(0.0f),
+      windSumSquares(0.0f),
+      validTemperatureCount(0),
+      temperatureSum(0.0f),
+      temperatureSumSquares(0.0f),
+      hasValidSolar(false),
+      totalSolar(0.0f)
+{
+}
 
 //----------------------------------------------------------------------------
 // YearNode functions
@@ -61,21 +79,13 @@ bool operator>=(const YearNode& left, const YearNode& right)
 }
 
 //----------------------------------------------------------------------------
-// File-local helper state and traversal callback functions
+// File-local helper state and helper functions
 namespace
 {
 int g_targetYear = 0;
 int g_targetMonth = 0;
 
 const YearNode* g_foundYearNode = nullptr;
-
-Vector<float>* g_speedValues = nullptr;
-Vector<float>* g_temperatureValues = nullptr;
-float g_totalSolar = 0.0f;
-
-bool* g_hasValidWind = nullptr;
-bool* g_hasValidTemperature = nullptr;
-bool* g_hasValidSolar = nullptr;
 
 Vector<float>* g_sForST = nullptr;
 Vector<float>* g_tForST = nullptr;
@@ -95,117 +105,6 @@ void FindYearNodeByYear(const YearNode& node)
 }
 
 //----------------------------------------------------------------------------
-// Collects valid speed values from a monthly BST.
-void CollectSpeedValue(const WeatherRecType& record)
-{
-    const float speed = record.GetSpeed();
-
-    if (speed >= 0.0f && g_speedValues != nullptr)
-    {
-        g_speedValues->Add(speed);
-    }
-}
-
-//----------------------------------------------------------------------------
-// Collects valid ambient temperature values from a monthly BST.
-void CollectTemperatureValue(const WeatherRecType& record)
-{
-    const float temperature = record.GetAmbientTemperature();
-
-    if (temperature >= 0.0f && g_temperatureValues != nullptr)
-    {
-        g_temperatureValues->Add(temperature);
-    }
-}
-
-//----------------------------------------------------------------------------
-// Accumulates solar radiation total from a monthly BST.
-void CollectSolarTotal(const WeatherRecType& record)
-{
-    const float solar = record.GetSolarRadiation();
-
-    if (solar >= 100.0f)
-    {
-        g_totalSolar += (solar * (1.0f / 6.0f)) / 1000.0f;
-    }
-}
-
-//----------------------------------------------------------------------------
-// Checks whether at least one valid wind value exists.
-void CheckValidWind(const WeatherRecType& record)
-{
-    if (g_hasValidWind != nullptr && record.GetSpeed() >= 0.0f)
-    {
-        *g_hasValidWind = true;
-    }
-}
-
-//----------------------------------------------------------------------------
-// Checks whether at least one valid temperature value exists.
-void CheckValidTemperature(const WeatherRecType& record)
-{
-    if (g_hasValidTemperature != nullptr &&
-            record.GetAmbientTemperature() >= 0.0f)
-    {
-        *g_hasValidTemperature = true;
-    }
-}
-
-//----------------------------------------------------------------------------
-// Checks whether at least one valid solar radiation value exists.
-void CheckValidSolar(const WeatherRecType& record)
-{
-    if (g_hasValidSolar != nullptr &&
-            record.GetSolarRadiation() >= 100.0f)
-    {
-        *g_hasValidSolar = true;
-    }
-}
-
-//----------------------------------------------------------------------------
-// Collects paired values for sample Pearson correlation coefficient.
-void CollectSPCCPairs(const WeatherRecType& record)
-{
-    const float speed = record.GetSpeed();
-    const float temperature = record.GetAmbientTemperature();
-    const float solar = record.GetSolarRadiation();
-
-    if (speed >= 0.0f && temperature >= 0.0f &&
-            g_sForST != nullptr && g_tForST != nullptr)
-    {
-        g_sForST->Add(speed);
-        g_tForST->Add(temperature);
-    }
-
-    if (speed >= 0.0f && solar >= 100.0f &&
-            g_sForSR != nullptr && g_rForSR != nullptr)
-    {
-        g_sForSR->Add(speed);
-        g_rForSR->Add(solar);
-    }
-
-    if (temperature >= 0.0f && solar >= 100.0f &&
-            g_tForTR != nullptr && g_rForTR != nullptr)
-    {
-        g_tForTR->Add(temperature);
-        g_rForTR->Add(solar);
-    }
-}
-
-//----------------------------------------------------------------------------
-// Traverses each year node and, if the selected month exists, traverses that month BST.
-void CollectSPCCFromYearNode(const YearNode& node)
-{
-    std::map<int, Bst<WeatherRecType> >::const_iterator monthIt =
-        node.recordsByMonth.find(g_targetMonth);
-
-    if (monthIt != node.recordsByMonth.end())
-    {
-        monthIt->second.inorderTraversal(CollectSPCCPairs);
-    }
-}
-
-//----------------------------------------------------------------------------
 // Finds a year node in the outer BST.
 const YearNode* LocateYearNode(const Bst<YearNode>& yearTree, int year)
 {
@@ -218,15 +117,15 @@ const YearNode* LocateYearNode(const Bst<YearNode>& yearTree, int year)
 }
 
 //----------------------------------------------------------------------------
-// Finds a month BST inside a year node.
-const Bst<WeatherRecType>* LocateMonthTree(const YearNode* yearNode, int month)
+// Finds a month bucket inside a year node.
+const MonthBucket* LocateMonthBucket(const YearNode* yearNode, int month)
 {
     if (yearNode == nullptr)
     {
         return nullptr;
     }
 
-    std::map<int, Bst<WeatherRecType> >::const_iterator monthIt =
+    std::map<int, MonthBucket>::const_iterator monthIt =
         yearNode->recordsByMonth.find(month);
 
     if (monthIt == yearNode->recordsByMonth.end())
@@ -235,6 +134,103 @@ const Bst<WeatherRecType>* LocateMonthTree(const YearNode* yearNode, int month)
     }
 
     return &(monthIt->second);
+}
+
+//----------------------------------------------------------------------------
+// Checks whether a day vector already contains the same timestamp record.
+bool ContainsTimestampInDay(const Vector<WeatherRecType>& dayRecords,
+                            const WeatherRecType& record)
+{
+    for (int i = 0; i < dayRecords.Size(); ++i)
+    {
+        if (dayRecords[i] == record)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+//----------------------------------------------------------------------------
+// Computes sample standard deviation from cached sum values.
+float ComputeSampleStandardDeviation(float sum, float sumSquares, int count)
+{
+    if (count < 2)
+    {
+        return 0.0f;
+    }
+
+    const float n = static_cast<float>(count);
+    const float mean = sum / n;
+    float numerator = sumSquares - (n * mean * mean);
+
+    if (numerator < 0.0f)
+    {
+        numerator = 0.0f;
+    }
+
+    return squareRoot(numerator / static_cast<float>(count - 1));
+}
+
+//----------------------------------------------------------------------------
+// Collects paired values for sample Pearson correlation coefficient.
+void CollectSPCCPairs(const WeatherRecType& record)
+{
+    const float speed = record.GetSpeed();
+    const float temperature = record.GetAmbientTemperature();
+    const float solar = record.GetSolarRadiation();
+
+    if (speed >= 0.0f && temperature >= 0.0f &&
+        g_sForST != nullptr && g_tForST != nullptr)
+    {
+        g_sForST->Add(speed);
+        g_tForST->Add(temperature);
+    }
+
+    if (speed >= 0.0f && solar >= 100.0f &&
+        g_sForSR != nullptr && g_rForSR != nullptr)
+    {
+        g_sForSR->Add(speed);
+        g_rForSR->Add(solar);
+    }
+
+    if (temperature >= 0.0f && solar >= 100.0f &&
+        g_tForTR != nullptr && g_rForTR != nullptr)
+    {
+        g_tForTR->Add(temperature);
+        g_rForTR->Add(solar);
+    }
+}
+
+//----------------------------------------------------------------------------
+// Traverses a year node and collects SPCC pairs from the selected month.
+void CollectSPCCFromYearNode(const YearNode& node)
+{
+    std::map<int, MonthBucket>::const_iterator monthIt =
+        node.recordsByMonth.find(g_targetMonth);
+
+    if (monthIt == node.recordsByMonth.end())
+    {
+        return;
+    }
+
+    const MonthBucket& monthBucket = monthIt->second;
+
+    std::map<int, Vector<WeatherRecType> >::const_iterator dayIt =
+        monthBucket.recordsByDay.begin();
+
+    while (dayIt != monthBucket.recordsByDay.end())
+    {
+        const Vector<WeatherRecType>& dayRecords = dayIt->second;
+
+        for (int i = 0; i < dayRecords.Size(); ++i)
+        {
+            CollectSPCCPairs(dayRecords[i]);
+        }
+
+        ++dayIt;
+    }
 }
 }
 
@@ -251,6 +247,7 @@ bool WeatherBstMapStore::AddRecord(const WeatherRecType& record)
 {
     const int year = record.GetDate().GetYear();
     const int month = record.GetDate().GetMonth();
+    const int day = record.GetDate().GetDay();
 
     YearNode searchKey(year);
 
@@ -267,7 +264,42 @@ bool WeatherBstMapStore::AddRecord(const WeatherRecType& record)
         return false;
     }
 
-    return yearNode->recordsByMonth[month].insert(record);
+    MonthBucket& monthBucket = yearNode->recordsByMonth[month];
+    Vector<WeatherRecType>& dayRecords = monthBucket.recordsByDay[day];
+
+    if (ContainsTimestampInDay(dayRecords, record))
+    {
+        return false;
+    }
+
+    dayRecords.Add(record);
+
+    const float speed = record.GetSpeed();
+    if (speed >= 0.0f)
+    {
+        monthBucket.windValues.Add(speed);
+        monthBucket.windSum += speed;
+        monthBucket.windSumSquares += speed * speed;
+        ++monthBucket.validWindCount;
+    }
+
+    const float temperature = record.GetAmbientTemperature();
+    if (temperature >= 0.0f)
+    {
+        monthBucket.temperatureValues.Add(temperature);
+        monthBucket.temperatureSum += temperature;
+        monthBucket.temperatureSumSquares += temperature * temperature;
+        ++monthBucket.validTemperatureCount;
+    }
+
+    const float solar = record.GetSolarRadiation();
+    if (solar >= 100.0f)
+    {
+        monthBucket.hasValidSolar = true;
+        monthBucket.totalSolar += (solar * (1.0f / 6.0f)) / 1000.0f;
+    }
+
+    return true;
 }
 
 //----------------------------------------------------------------------------
@@ -284,16 +316,23 @@ int WeatherBstMapStore::GetYearCount() const
 
 bool WeatherBstMapStore::ContainsRecord(int year, const WeatherRecType& record) const
 {
-    const int month = record.GetDate().GetMonth();
     const YearNode* yearNode = LocateYearNode(m_yearTree, year);
-    const Bst<WeatherRecType>* monthTree = LocateMonthTree(yearNode, month);
+    const MonthBucket* monthBucket = LocateMonthBucket(yearNode, record.GetDate().GetMonth());
 
-    if (monthTree == nullptr)
+    if (monthBucket == nullptr)
     {
         return false;
     }
 
-    return monthTree->search(record);
+    std::map<int, Vector<WeatherRecType> >::const_iterator dayIt =
+        monthBucket->recordsByDay.find(record.GetDate().GetDay());
+
+    if (dayIt == monthBucket->recordsByDay.end())
+    {
+        return false;
+    }
+
+    return ContainsTimestampInDay(dayIt->second, record);
 }
 
 //----------------------------------------------------------------------------
@@ -301,76 +340,42 @@ bool WeatherBstMapStore::ContainsRecord(int year, const WeatherRecType& record) 
 float WeatherBstMapStore::FindSpeedMean(int month, int year) const
 {
     const YearNode* yearNode = LocateYearNode(m_yearTree, year);
-    const Bst<WeatherRecType>* monthTree = LocateMonthTree(yearNode, month);
+    const MonthBucket* monthBucket = LocateMonthBucket(yearNode, month);
 
-    if (monthTree == nullptr)
+    if (monthBucket == nullptr || monthBucket->validWindCount == 0)
     {
         return 0.0f;
     }
 
-    Vector<float> speedValues;
-    g_speedValues = &speedValues;
-
-    monthTree->inorderTraversal(CollectSpeedValue);
-
-    g_speedValues = nullptr;
-
-    if (speedValues.Size() == 0)
-    {
-        return 0.0f;
-    }
-
-    return calculateMean(speedValues);
+    return monthBucket->windSum / static_cast<float>(monthBucket->validWindCount);
 }
 
 float WeatherBstMapStore::FindSpeedStandardDeviation(int month, int year) const
 {
     const YearNode* yearNode = LocateYearNode(m_yearTree, year);
-    const Bst<WeatherRecType>* monthTree = LocateMonthTree(yearNode, month);
+    const MonthBucket* monthBucket = LocateMonthBucket(yearNode, month);
 
-    if (monthTree == nullptr)
+    if (monthBucket == nullptr)
     {
         return 0.0f;
     }
 
-    Vector<float> speedValues;
-    g_speedValues = &speedValues;
-
-    monthTree->inorderTraversal(CollectSpeedValue);
-
-    g_speedValues = nullptr;
-
-    if (speedValues.Size() < 2)
-    {
-        return 0.0f;
-    }
-
-    return calculateStandardDeviation(speedValues);
+    return ComputeSampleStandardDeviation(monthBucket->windSum,
+                                          monthBucket->windSumSquares,
+                                          monthBucket->validWindCount);
 }
 
 float WeatherBstMapStore::FindSpeedMad(int month, int year) const
 {
     const YearNode* yearNode = LocateYearNode(m_yearTree, year);
-    const Bst<WeatherRecType>* monthTree = LocateMonthTree(yearNode, month);
+    const MonthBucket* monthBucket = LocateMonthBucket(yearNode, month);
 
-    if (monthTree == nullptr)
+    if (monthBucket == nullptr)
     {
         return 0.0f;
     }
 
-    Vector<float> speedValues;
-    g_speedValues = &speedValues;
-
-    monthTree->inorderTraversal(CollectSpeedValue);
-
-    g_speedValues = nullptr;
-
-    if (speedValues.Size() == 0)
-    {
-        return 0.0f;
-    }
-
-    return mad(speedValues);
+    return mad(monthBucket->windValues);
 }
 
 //----------------------------------------------------------------------------
@@ -378,76 +383,43 @@ float WeatherBstMapStore::FindSpeedMad(int month, int year) const
 float WeatherBstMapStore::FindTemperatureMean(int month, int year) const
 {
     const YearNode* yearNode = LocateYearNode(m_yearTree, year);
-    const Bst<WeatherRecType>* monthTree = LocateMonthTree(yearNode, month);
+    const MonthBucket* monthBucket = LocateMonthBucket(yearNode, month);
 
-    if (monthTree == nullptr)
+    if (monthBucket == nullptr || monthBucket->validTemperatureCount == 0)
     {
         return 0.0f;
     }
 
-    Vector<float> temperatureValues;
-    g_temperatureValues = &temperatureValues;
-
-    monthTree->inorderTraversal(CollectTemperatureValue);
-
-    g_temperatureValues = nullptr;
-
-    if (temperatureValues.Size() == 0)
-    {
-        return 0.0f;
-    }
-
-    return calculateMean(temperatureValues);
+    return monthBucket->temperatureSum /
+           static_cast<float>(monthBucket->validTemperatureCount);
 }
 
 float WeatherBstMapStore::FindTemperatureStandardDeviation(int month, int year) const
 {
     const YearNode* yearNode = LocateYearNode(m_yearTree, year);
-    const Bst<WeatherRecType>* monthTree = LocateMonthTree(yearNode, month);
+    const MonthBucket* monthBucket = LocateMonthBucket(yearNode, month);
 
-    if (monthTree == nullptr)
+    if (monthBucket == nullptr)
     {
         return 0.0f;
     }
 
-    Vector<float> temperatureValues;
-    g_temperatureValues = &temperatureValues;
-
-    monthTree->inorderTraversal(CollectTemperatureValue);
-
-    g_temperatureValues = nullptr;
-
-    if (temperatureValues.Size() < 2)
-    {
-        return 0.0f;
-    }
-
-    return calculateStandardDeviation(temperatureValues);
+    return ComputeSampleStandardDeviation(monthBucket->temperatureSum,
+                                          monthBucket->temperatureSumSquares,
+                                          monthBucket->validTemperatureCount);
 }
 
 float WeatherBstMapStore::FindTemperatureMad(int month, int year) const
 {
     const YearNode* yearNode = LocateYearNode(m_yearTree, year);
-    const Bst<WeatherRecType>* monthTree = LocateMonthTree(yearNode, month);
+    const MonthBucket* monthBucket = LocateMonthBucket(yearNode, month);
 
-    if (monthTree == nullptr)
+    if (monthBucket == nullptr)
     {
         return 0.0f;
     }
 
-    Vector<float> temperatureValues;
-    g_temperatureValues = &temperatureValues;
-
-    monthTree->inorderTraversal(CollectTemperatureValue);
-
-    g_temperatureValues = nullptr;
-
-    if (temperatureValues.Size() == 0)
-    {
-        return 0.0f;
-    }
-
-    return mad(temperatureValues);
+    return mad(monthBucket->temperatureValues);
 }
 
 //----------------------------------------------------------------------------
@@ -455,18 +427,14 @@ float WeatherBstMapStore::FindTemperatureMad(int month, int year) const
 float WeatherBstMapStore::FindTotalSolar(int month, int year) const
 {
     const YearNode* yearNode = LocateYearNode(m_yearTree, year);
-    const Bst<WeatherRecType>* monthTree = LocateMonthTree(yearNode, month);
+    const MonthBucket* monthBucket = LocateMonthBucket(yearNode, month);
 
-    if (monthTree == nullptr)
+    if (monthBucket == nullptr)
     {
         return 0.0f;
     }
 
-    g_totalSolar = 0.0f;
-
-    monthTree->inorderTraversal(CollectSolarTotal);
-
-    return g_totalSolar;
+    return monthBucket->totalSolar;
 }
 
 //----------------------------------------------------------------------------
@@ -474,61 +442,25 @@ float WeatherBstMapStore::FindTotalSolar(int month, int year) const
 bool WeatherBstMapStore::HasValidWind(int month, int year) const
 {
     const YearNode* yearNode = LocateYearNode(m_yearTree, year);
-    const Bst<WeatherRecType>* monthTree = LocateMonthTree(yearNode, month);
+    const MonthBucket* monthBucket = LocateMonthBucket(yearNode, month);
 
-    if (monthTree == nullptr)
-    {
-        return false;
-    }
-
-    bool hasValidWind = false;
-    g_hasValidWind = &hasValidWind;
-
-    monthTree->inorderTraversal(CheckValidWind);
-
-    g_hasValidWind = nullptr;
-
-    return hasValidWind;
+    return monthBucket != nullptr && monthBucket->validWindCount > 0;
 }
 
 bool WeatherBstMapStore::HasValidTemperature(int month, int year) const
 {
     const YearNode* yearNode = LocateYearNode(m_yearTree, year);
-    const Bst<WeatherRecType>* monthTree = LocateMonthTree(yearNode, month);
+    const MonthBucket* monthBucket = LocateMonthBucket(yearNode, month);
 
-    if (monthTree == nullptr)
-    {
-        return false;
-    }
-
-    bool hasValidTemperature = false;
-    g_hasValidTemperature = &hasValidTemperature;
-
-    monthTree->inorderTraversal(CheckValidTemperature);
-
-    g_hasValidTemperature = nullptr;
-
-    return hasValidTemperature;
+    return monthBucket != nullptr && monthBucket->validTemperatureCount > 0;
 }
 
 bool WeatherBstMapStore::HasValidSolar(int month, int year) const
 {
     const YearNode* yearNode = LocateYearNode(m_yearTree, year);
-    const Bst<WeatherRecType>* monthTree = LocateMonthTree(yearNode, month);
+    const MonthBucket* monthBucket = LocateMonthBucket(yearNode, month);
 
-    if (monthTree == nullptr)
-    {
-        return false;
-    }
-
-    bool hasValidSolar = false;
-    g_hasValidSolar = &hasValidSolar;
-
-    monthTree->inorderTraversal(CheckValidSolar);
-
-    g_hasValidSolar = nullptr;
-
-    return hasValidSolar;
+    return monthBucket != nullptr && monthBucket->hasValidSolar;
 }
 
 //----------------------------------------------------------------------------
